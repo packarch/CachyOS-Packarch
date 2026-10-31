@@ -372,7 +372,7 @@ de l'ISO à la fin.
   une machine virtuelle, applique la taille de la fenêtre, que XFCE n'applique
   pas tout seul. Absent du système installé, où le script n'existe pas.
 - **Thème « default » dès le démarrage** : `xsettings.xml` (thème GTK
-  `Arc-Dark`, icônes `Luna-Purple-Dark`, curseur `Qogir-Dark` au lieu de
+  `Arc-Dark`, icônes `Packarch` (dossiers violets, voir plus bas), curseur `Qogir-Dark` au lieu de
   `capitaine-cursors`), `xfwm4.xml` (bordures `Arc-Dark`),
   `xfce4-desktop.xml` (fond `default.png`), couleurs du terminal ajoutées à
   `terminalrc` (xfce4-terminal les importe dans xfconf au premier lancement).
@@ -395,8 +395,8 @@ de l'ISO à la fin.
 - **Greeter LightDM sombre** (XFCE et Openbox) : `packarch-system-settings`
   règle dans `/usr/share/lightdm/lightdm-gtk-greeter.conf.d/50-packarch.conf`
   son propre thème GTK `Packarch-Greeter` (le GTK 3 de `Greybird-dark`, dans
-  ce paquet depuis 1.0-4), les icônes `Luna-Red-Dark`
-  (`packarch-icons`), le curseur `Qogir-Dark` (`qogir-icon-theme`) et le fond
+  ce paquet depuis 1.0-4), les icônes `Packarch` (dossiers bleus,
+  `packarch-icons` ; `Luna-Red-Dark` avant 1.0-12), le curseur `Qogir-Dark` (`qogir-icon-theme`) et le fond
   `/usr/share/backgrounds/wallpaper-alt.png` (`packarch-backgrounds` ;
   `packarch-system-settings` 1.0-3). Le
   greeter lit ce dossier avant `/etc/lightdm/lightdm-gtk-greeter.conf`, dont
@@ -490,11 +490,29 @@ de l'auteur) :
   `Gruvbox`, `Juno-Mirage`, `Nordic`, `Orchis-Red-Dark` ; live et bureau XFCE
   seulement, par `packarch-xfce-settings` : `packarch-openbox` 7.0-45 n'en
   dépend plus), `packarch-icons`
-  (`Luna`, `Luna-*-Dark`, `Vimix-Black(-Dark)`, et `Packarch(-Dark)`,
+  (`Packarch`, `Vimix-Black(-Dark)`, et `Packarch-Base(-Dark)`,
   `Papirus-Apps` dont ils héritent ; dépend de `qogir-icon-theme` et
   `papirus-icon-theme`), `packarch-backgrounds` (fonds du sélecteur,
   `xfce-default.png`, `wallpaper-alt.png`). Les icônes se complètent par
-  héritage : `Luna-*-Dark` → `Packarch-Dark` → `Papirus-Apps`, `Papirus-Dark`.
+  héritage : `Packarch` → `Packarch-Base-Dark` → `Papirus-Apps`, `Papirus-Dark`.
+- **un seul thème d'icônes Luna : `Packarch`** (`packarch-icons` 2.0-8,
+  2026-10-31) : l'ancien `Luna-Antidote-Dark` (dossiers bleus `#0096ff`),
+  rendu autonome. `Luna`, `Luna-Dark` et les `Luna-*-Dark` sont supprimés, et
+  l'ancienne base `Packarch`/`Packarch-Dark` est renommée
+  `Packarch-Base`/`Packarch-Base-Dark` (héritages et liens des autres thèmes
+  mis à jour). La couleur des dossiers est appliquée par utilisateur par
+  **`packarch-folder-color`** (github.com/packarch/packarch-folder-color,
+  `apps/packarch-folder-color`) : il génère `~/.local/share/icons/Packarch-<rrggbb>`
+  (hérite de `Packarch`, dossiers recolorés, un seul à la fois).
+  `packarch-skin` 1.0.0-18 l'appelle avec le `folder_color` des thèmes
+  (`default`/`packarch` bleu, `red-satanic` rouge `#ff4747`, `pink-sylvanas`
+  violet `#a659ff`, `yellow-flower` jaune `#ffc86a`), le sélecteur XFCE aussi
+  (`packarch-xfce-settings` 1.0.9-6 : yellow, green `#00d96e`, purple, red,
+  blue, default violet ; gray reste `Vimix-Black-Dark`). `/etc/skel` et
+  l'écran de connexion utilisent `Packarch` tel quel (bleu) ; sur XFCE,
+  `init-backdrop.sh` (`.xprofile`) applique le violet du thème `default` à la
+  première session, et remplace un ancien thème `Luna-*` par `Packarch` de
+  même couleur.
 - ce que seul Openbox utilise est dans `packarch-themes-openbox` (un thème
   GTK `Packarch-<Thème>` et un thème Openbox `OB-Packarch-<Thème>` par thème
   de `packarch-skin`, voir la section 6), `packarch-icons-openbox` (`Hack`,
@@ -507,8 +525,9 @@ de l'auteur) :
   Nordic-Folders(-Bluish, -Green), Numix-Apps(-White), Vimix-White(-Dark),
   White-Folders, Win11(-Dark)) sont dans `packarch-icons-extra`, gardé dans
   [packarch] mais installé nulle part (`sudo pacman -S packarch-icons-extra`).
-  `Luna` et `Vimix-Black` restent dans `packarch-icons` : les `Luna-*-Dark` et
-  `Vimix-Black-Dark` pointent vers leurs dossiers par des liens symboliques.
+  `Vimix-Black` reste dans `packarch-icons` : `Vimix-Black-Dark` pointe vers
+  ses dossiers par des liens symboliques. `Luna-Light` a ses propres copies
+  des icônes de `Luna` depuis `packarch-icons-extra` 2.0-3.
 - plus aucun thème, icône ni fond d'écran n'est copié à la main dans
   `airootfs` (ni copié par `apply-live-config`).
 
