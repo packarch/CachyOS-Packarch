@@ -90,7 +90,7 @@ liste de ses paquets.
 `run.sh` démarre une VM QEMU/KVM en UEFI :
 
 ```bash
-sudo pacman -S --needed qemu-desktop edk2-ovmf
+sudo pacman -S --needed qemu-desktop edk2-ovmf virt-viewer
 
 ./run.sh                   # live (ISO la plus récente de out/)
 ./run.sh -i                # système installé sur le disque virtuel
@@ -98,8 +98,11 @@ sudo pacman -S --needed qemu-desktop edk2-ovmf
 ```
 
 Le disque virtuel (30 Go) et les variables UEFI sont conservés dans
-`vm-test/` d'un lancement à l'autre. Dans le live, le bouton « Ajuster la
-résolution » du tableau de bord adapte l'affichage à la taille de la fenêtre.
+`vm-test/` d'un lancement à l'autre. L'affichage passe par SPICE, dans
+`remote-viewer` (`virt-viewer`) : le copier-coller fonctionne entre l'hôte et
+la VM, et la résolution de la VM suit la taille de la fenêtre (agent
+`spice-vdagent` de l'ISO). Le bouton « Ajuster la résolution » du live reste
+utile si l'agent n'a pas encore démarré.
 
 L'installation en ligne demande une connexion Internet et télécharge environ
 3 Go.

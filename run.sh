@@ -13,9 +13,13 @@
 # SSH : le port 2222 de l'hôte (127.0.0.1 seulement) mène au port 22 de la
 # VM (sshd à activer dans la VM, voir ./vm-themes.sh setup).
 #
-# Affichage : virtio-vga sans accélération GL (virtio-vga-gl donne un écran
-# noir avec NVIDIA), 1600x900 au démarrage, image adaptée à la fenêtre. Dans
-# le live, le bouton « Ajuster la résolution » applique la taille de la fenêtre.
+# Affichage : SPICE dans remote-viewer (paquet virt-viewer, ouvert par QEMU :
+# -display spice-app), virtio-vga sans accélération GL (virtio-vga-gl donne un
+# écran noir avec NVIDIA), 1600x900 au démarrage. Le canal de l'agent SPICE,
+# relayé dans la VM par spice-vdagent (sur l'ISO), partage le presse-papiers
+# (copier-coller dans les deux sens) et adapte la résolution de la VM à la
+# taille de la fenêtre. La fenêtre GTK de QEMU (-display gtk), avec son canal
+# qemu-vdagent, ne transmettait pas le presse-papiers.
 
 set -euo pipefail
 
@@ -44,11 +48,11 @@ while (( $# )); do
     shift
 done
 
-# Prérequis (README) : qemu-desktop et edk2-ovmf
+# Prérequis (README) : qemu-desktop, edk2-ovmf et virt-viewer (remote-viewer)
 if ! command -v qemu-system-x86_64 &>/dev/null || ! command -v qemu-img &>/dev/null ||
-    [[ ! -f ${ovmf_code} ]]; then
-    echo "QEMU ou OVMF manquant :" >&2
-    echo "  sudo pacman -S --needed qemu-desktop edk2-ovmf" >&2
+    ! command -v remote-viewer &>/dev/null || [[ ! -f ${ovmf_code} ]]; then
+    echo "QEMU, OVMF ou remote-viewer manquant :" >&2
+    echo "  sudo pacman -S --needed qemu-desktop edk2-ovmf virt-viewer" >&2
     exit 1
 fi
 
@@ -81,7 +85,9 @@ exec qemu-system-x86_64 -enable-kvm -machine q35 -cpu host -smp 4 -m 6G \
     -drive file="${disk}",if=none,format=qcow2,id=hd0 \
     -device virtio-blk-pci,drive=hd0,bootindex=1 \
     "${boot_args[@]}" \
-    -device virtio-vga,xres=1600,yres=900 -display gtk,zoom-to-fit=on \
+    -device virtio-vga,xres=1600,yres=900 -display spice-app \
+    -device virtio-serial-pci -chardev spicevmc,id=vdagent,name=vdagent \
+    -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
     -nic user,model=virtio-net-pci,hostfwd=tcp:127.0.0.1:2222-:22 \
     -device qemu-xhci -device usb-tablet \
     -audiodev pipewire,id=snd0 -device intel-hda -device hda-duplex,audiodev=snd0
