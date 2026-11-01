@@ -1184,7 +1184,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
 | `archiso/airootfs/etc/skel/.config/` (réglages KDE) | supprimés |
 | `archiso/airootfs/etc/skel/.config/xfce4/panel/launcher-31/`, `smplayer/`, `geany/`, `.bashrc`, `.bash_profile` | ajoutés (le reste des réglages XFCE et le sélecteur de thèmes sont dans `packarch-xfce-settings`) |
 | `archiso/pacman.conf` | dépôt `[packarch]` (build) |
-| `archiso/airootfs/etc/pacman.conf`, `etc/pacman-more.conf` | dépôt `[packarch]` |
+| `archiso/airootfs/etc/pacman.conf`, `etc/pacman-more.conf` | dépôt `[packarch]` ; `CheckSpace` activé (vérifie la place disque avant d'installer, comme Arch ; commenté dans la configuration de CachyOS) |
 | `archiso/airootfs/etc/pacman.d/packarch-mirrorlist` | ajouté |
 | `archiso/airootfs/usr/local/bin/calamares-online.sh` | modifié |
 | `archiso/airootfs/usr/local/bin/apply-live-config` | ajouté |
