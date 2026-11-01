@@ -16,13 +16,19 @@ cd "$(dirname "$(readlink -f "$0")")"
 repo_dir="$(readlink -f ../localrepo)"
 repo_name="packarch-live-local"
 
-# Built in a clean Arch Linux chroot (../scripts/chroot.sh): Calamares runs on
-# the live ISO, on any processor, and a build on a CachyOS znver4 system
-# requires AVX-512 ("CPU ISA level is lower than required"), whatever the
-# CFLAGS. makepkg-generic.conf only lists the package file.
+# Built in a clean Arch Linux chroot (chroot.sh of the myrepo-pkgs repository,
+# cloned next to this one, or PACKARCH_PKGS): Calamares runs on the live ISO,
+# on any processor, and a build on a CachyOS znver4 system requires AVX-512
+# ("CPU ISA level is lower than required"), whatever the CFLAGS.
+# makepkg-generic.conf only lists the package file.
 makepkg_conf="$(readlink -f ../scripts/makepkg-generic.conf)"
-# shellcheck source=../scripts/chroot.sh
-source ../scripts/chroot.sh
+chroot_sh="${PACKARCH_PKGS:-../../myrepo-pkgs}/chroot.sh"
+if [[ ! -f $chroot_sh ]]; then
+    echo "$chroot_sh introuvable : cloner packarch/myrepo-pkgs à côté de CachyOS-Packarch, ou définir PACKARCH_PKGS" >&2
+    exit 1
+fi
+# shellcheck source=../../myrepo-pkgs/chroot.sh
+source "$chroot_sh"
 
 force=false
 [[ ${1:-} == -f ]] && force=true
