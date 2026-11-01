@@ -444,6 +444,18 @@ copie sur le système installé, XFCE ou Openbox, sauf le bouton du live)
 
 ---
 
+**Dépannage à distance** (`packarch-depannage`, dépôt
+[packarch-depannage](https://github.com/packarch/packarch-depannage), paquet
+`myrepo-pkgs/apps/packarch-depannage`), sur le live et le système installé :
+fenêtre « Dépannage à distance » (menu Système) ; « Autoriser le dépannage
+(1 h) » démarre, avec le mot de passe de l'utilisateur, une session Tailscale
+avec Tailscale SSH et affiche le lien de connexion à transmettre à la
+personne qui dépanne. Elle l'ouvre avec son compte Tailscale et se connecte
+en root (`ssh root@packarch-<nom d'hôte>`). Arrêt automatique (minuterie
+systemd), « +1 h », « Arrêter maintenant » ; rien ne tourne en dehors d'une
+session, aucun secret sur l'ordinateur. Le réseau Tailscale de la personne
+qui dépanne doit isoler `tag:depannage` (README du dépôt).
+
 ## 5. Sélecteur de thèmes
 
 Depuis `packarch-xfce-settings` 1.0.9-7, le bureau XFCE utilise **les mêmes

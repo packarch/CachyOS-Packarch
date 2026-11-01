@@ -19,6 +19,7 @@ cachyos-cli-installer-new
 cachyos-drm-awaiter
 cachyos-grub-theme
 packarch-hello
+packarch-depannage
 cachyos-hooks
 cachyos-keyring
 cachyos-mirrorlist
