@@ -470,7 +470,14 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
   sur le système installé, comme avec Openbox.
 - tableau de bord : lanceur `plugin-30` avec un élément par thème
   (`launcher-30/theme-<thème>.desktop`, `packarch-skin apply <thème>`), icône
-  `/usr/share/xfcethemes/icons/<thème>.png` (miniature de son fond d'écran).
+  `/usr/share/xfcethemes/icons/<thème>.png` (miniature de son fond d'écran),
+  et « Couleur des dossiers » (`packarch-folder-color`) en dernier, donc en
+  haut de son menu (tableau de bord en bas). Ces fichiers et la liste sont
+  écrits par `packarch-skin render` (1.2.0). Si le bouton est retiré du
+  tableau de bord, l'entrée de menu « Restaurer le bouton des thèmes »
+  (`packarch-skin panel`) le remet avant la liste des fenêtres ; « Thèmes
+  Packarch » (`packarch-skin chooser`, fenêtre yad) permet de changer de
+  thème sans lui.
 - `theme-switcher.sh --<couleur>` ne fait plus que traduire les couleurs de
   l'ancien sélecteur (lanceurs des utilisateurs existants) : `default` →
   `default`, `blue` → `packarch`, `purple` → `pink-sylvanas`, `red` →
