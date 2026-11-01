@@ -531,16 +531,12 @@ de l'auteur) :
   violet `#a659ff`, `yellow-flower` jaune `#ffc86a`), sur Openbox et, depuis
   `packarch-xfce-settings` 1.0.9-7, sur XFCE. `/etc/skel` et l'écran de
   connexion utilisent `Packarch` tel quel (bleu, celui du thème `default`).
-- ce qu'aucun thème n'utilise est dans **`packarch-extra`** (anciennement
-  `packarch-icons-extra`), gardé dans [packarch] mais installé nulle part
-  (`sudo pacman -S packarch-extra`) : 14 thèmes d'icônes (Arc-Circle,
-  Luna-Light, Nordic-Folders(-Bluish, -Green), Numix-Apps(-White),
-  Vimix-Black(-Dark), Vimix-White(-Dark), White-Folders, Win11(-Dark)), les
-  thèmes GTK de l'ancien sélecteur XFCE (Arc-Dark, Dracula, Greybird-dark,
-  Gruvbox, Juno-Mirage, Nordic, Orchis-Red-Dark) et les anciens fonds
-  d'écran (sélecteur XFCE, `xfce-default.png`, anciens thèmes Openbox).
-  `Luna-Light` a ses propres copies des icônes de `Luna` depuis
-  `packarch-icons-extra` 2.0-3.
+- ce qu'aucun thème n'utilise (14 thèmes d'icônes dont Vimix-Black(-Dark),
+  les thèmes GTK de l'ancien sélecteur XFCE comme Arc-Dark ou Dracula, les
+  anciens fonds d'écran dont `xfce-default.png`), regroupé un moment dans
+  `packarch-extra` (anciennement `packarch-icons-extra`), a été **supprimé**
+  le 2026-11-01 : aucun paquet n'en dépendait. Il reste dans l'historique git
+  de myrepo-pkgs.
 - plus aucun thème, icône ni fond d'écran n'est copié à la main dans
   `airootfs` (ni copié par `apply-live-config`).
 
