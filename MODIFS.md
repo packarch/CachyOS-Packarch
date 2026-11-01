@@ -219,6 +219,13 @@ copie en RAM forcée (`copytoram=y` : démarrage plus lent, la clé USB peut
 rester branchée). Le menu syslinux passe à 9 lignes (`MENU ROWS 9`, messages
 décalés de 2 lignes dans `archiso_head.cfg`).
 
+**Menus de démarrage en français.** GRUB (`grub.cfg`, et `loopback.cfg`
+pour un démarrage par Ventoy, qui a aussi les entrées de copie en RAM) avec
+accents (police Unicode) ; syslinux (BIOS, PXE, entrées de fin de menu et
+messages `MENU TABMSG` / `MENU AUTOBOOT`) sans accents, sa police étant en
+CP437. `archiso_sys.cfg` démarrait par défaut `arch64`, entrée inexistante :
+`DEFAULT cos64` (Packarch, copie en RAM automatique).
+
 **Ajoutés :**
 
 | Rôle | Paquets |
