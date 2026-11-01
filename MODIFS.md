@@ -211,6 +211,14 @@ de GRUB retirée, entrée systemd-boot `02-archiso-linux-cachyos.conf` retirée
 `linux-cachyos`. Le système installé n'a pas de LTS non plus (voir
 [Corrections du code](#corrections-du-code-live-offlinepatch)).
 
+**Copie en RAM au choix.** L'entrée « Packarch » garde `copytoram=auto` (le
+live est copié en RAM s'il fait moins de 4 Gio et que la mémoire disponible
+dépasse sa taille + 2 Gio). Deux entrées la suivent, dans GRUB et syslinux :
+copie en RAM forcée (`copytoram=y` : démarrage plus lent, la clé USB peut
+être retirée) et sans copie (`copytoram=n` : démarrage rapide, la clé doit
+rester branchée). Le menu syslinux passe à 9 lignes (`MENU ROWS 9`, messages
+décalés de 2 lignes dans `archiso_head.cfg`).
+
 **Ajoutés :**
 
 | Rôle | Paquets |
