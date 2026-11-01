@@ -11,7 +11,8 @@
 # variables UEFI (vm-test/OVMF_VARS.fd) sont conservés entre deux lancements.
 #
 # SSH : le port 2222 de l'hôte (127.0.0.1 seulement) mène au port 22 de la
-# VM (sshd à activer dans la VM, voir ./vm-themes.sh setup).
+# VM (à activer dans la VM : sudo systemctl enable --now sshd, puis
+# sudo ufw allow ssh), par exemple : ssh -p 2222 UTILISATEUR@127.0.0.1
 #
 # Affichage : SPICE dans remote-viewer (paquet virt-viewer, ouvert par QEMU :
 # -display spice-app), virtio-vga sans accélération GL (virtio-vga-gl donne un

@@ -139,33 +139,6 @@ les variables UEFI. L'affichage utilise `virtio-vga` **sans accélération 3D**
 1600×900 au démarrage, l'image étant adaptée à la taille de la fenêtre ; dans
 le live, le bouton « Ajuster la résolution » applique la taille de la fenêtre.
 
-### Personnaliser les thèmes Openbox dans la VM
-
-`run.sh` redirige le port 2222 de l'hôte (127.0.0.1 seulement) vers le SSH de
-la VM. `vm-themes.sh` échange par ce biais les thèmes
-(`~/.config/openbox/themes`) entre la VM et les sources de `packarch-openbox-settings`
-(`../myrepo-pkgs`) :
-
-```bash
-# une fois par installation, dans la VM :
-#   sudo systemctl enable --now sshd && sudo ufw allow ssh
-./vm-themes.sh setup UTILISATEUR   # copie la clé SSH (mot de passe demandé une fois)
-./vm-themes.sh push [THÈME]        # sources → VM, puis applique le thème
-./vm-themes.sh pull                # VM → vm-test/themes, affiche ce qui a changé
-./vm-themes.sh ssh [COMMANDE]      # shell ou commande dans la session de la VM
-```
-
-`push` remplace les dossiers de thèmes de la VM (les fichiers propres à la VM
-restent : `.current`, `.panel`, `.applied`, `.system`, `system.ini`), retire
-leurs marqueurs `polybar/.module` pour que `packarch-skin` refasse la
-détection du matériel, applique le thème puis enregistre l'état obtenu comme
-référence (`vm-test/themes-base`). `pull` n'affiche que ce qui a changé dans la
-VM depuis cette référence, sans `colors.ini` ni `colors.rasi` (régénérés par
-`packarch-skin` : les couleurs se changent dans `theme.toml`). Les
-modifications sont ensuite reportées à la main dans les sources : le
-`config.ini` de la VM est adapté à son matériel (`ethernet`, pas de batterie
-ni de luminosité), il ne doit pas être recopié tel quel.
-
 ### Nettoyer le projet
 
 ```bash

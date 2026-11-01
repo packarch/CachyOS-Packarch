@@ -109,14 +109,8 @@ L'installation en ligne demande une connexion Internet et télécharge environ
 3 Go.
 
 Le port 2222 de l'hôte mène au SSH de la VM (à activer dans la VM :
-`sudo systemctl enable --now sshd` puis `sudo ufw allow ssh`). `vm-themes.sh` s'en sert pour échanger
-les thèmes Openbox entre la VM et les sources de `packarch-openbox-settings` :
-
-```bash
-./vm-themes.sh setup UTILISATEUR   # une fois par installation (clé SSH)
-./vm-themes.sh push [THÈME]        # sources → VM, puis applique le thème
-./vm-themes.sh pull                # VM → vm-test/themes, affiche ce qui a changé
-```
+`sudo systemctl enable --now sshd` puis `sudo ufw allow ssh`) :
+`ssh -p 2222 UTILISATEUR@127.0.0.1`.
 
 ## Nettoyer le projet
 
@@ -134,7 +128,6 @@ compilation de Calamares, VM…) et remet la date de l'ISO à `AAMMJJ` dans
 | Chemin | Contenu |
 |---|---|
 | `build.sh`, `run.sh`, `reset.sh` | construire, tester, nettoyer |
-| `vm-themes.sh` | échanger les thèmes Openbox avec la VM (SSH) |
 | `archiso/` | profil archiso : listes de paquets, `pacman.conf`, chargeurs de démarrage |
 | `archiso/airootfs/` | fichiers ajoutés au live : réglages non empaquetés (`etc/skel`), configuration de Calamares (`etc/xdg/calamares`), scripts de l'installeur (`usr/local/bin`) ; les réglages XFCE et le sélecteur de thèmes viennent de `packarch-xfce-settings`, les réglages communs de `packarch-system-settings` |
 | `calamares/` | `PKGBUILD` de `cachyos-calamares-next` et `live-offline.patch` (modifications du code) |
