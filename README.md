@@ -25,9 +25,10 @@ Le détail de chaque modification par rapport à l'ISO officielle est dans
 - **zsh** comme shell par défaut, avec `cachyos-zsh-config` (oh-my-zsh,
   autosuggestions, coloration syntaxique) et une configuration
   **powerlevel10k** prête à l'emploi : pas d'assistant au premier terminal.
-- **Applications** : Firefox, Geany (préconfiguré), Meld, SMPlayer, htop,
-  catfish, et les logiciels de l'auteur : Cryptyrust, LilouCalc,
-  Nounours Player, packarch-rmatrix.
+- **Applications** : Firefox, Geany (préconfiguré), Meld, htop, catfish, et
+  les logiciels de l'auteur : Cryptyrust, LilouCalc, Nounours Player (seul
+  lecteur vidéo ; SMPlayer reste proposé dans Packarch Installer),
+  packarch-rmatrix.
 - **Calamares recompilé** (dossier `calamares/`) :
   - page **« Bureau »** : installation **en ligne** du XFCE du live, avec ses
     réglages et ses thèmes, ou du **bureau Openbox de Packarch** (polybar

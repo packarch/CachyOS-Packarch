@@ -218,7 +218,7 @@ de GRUB retirée, entrée systemd-boot `02-archiso-linux-cachyos.conf` retirée
 | Bureau | `xfce4`, les extensions de `xfce4-goodies` **sauf** `parole`, `xfburn`, `xfce4-sensors-plugin` et `mousepad`, `thunar-archive-plugin`, `thunar-media-tags-plugin`, `packarch-xfce-settings` (réglages XFCE dans `/etc/skel` et sélecteur de thèmes, dépôt Packarch, au lieu de `cachyos-xfce-settings` : voir [section 4](#4-réglages-xfce-packarch-xfce-settings)) |
 | Affichage et connexion | `xorg-server`, `xf86-input-libinput`, `lightdm`, `lightdm-gtk-greeter`, `lightdm-gtk-greeter-settings` |
 | Remplaçants des outils KDE | `network-manager-applet`, `blueman`, `pavucontrol`, `polkit-gnome`, `gvfs`, `gvfs-mtp`, `gvfs-smb`, `file-roller`, `xarchiver`, `ristretto`, `catfish` (recherche de fichiers) |
-| Applications | `geany` (seul éditeur graphique, avec `nano` en console), `meld` (comparaison de fichiers), `smplayer`, `smplayer-skins`, `smplayer-themes` (et `mpv` en dépendance), `htop` (btop est proposé dans Packarch Installer), `yay` |
+| Applications | `geany` (seul éditeur graphique, avec `nano` en console), `meld` (comparaison de fichiers), `nounours-player` (seul lecteur vidéo, avec `mpv` en dépendance ; SMPlayer n'est plus installé, il reste proposé dans Packarch Installer), `htop` (btop est proposé dans Packarch Installer), `yay` |
 | Applications de l'auteur (dépôt Packarch) | `cryptyrust` (chiffrement de fichiers), `liloucalc` (calculatrice scientifique), `nounours-player` (lecteur multimédia), `packarch-rmatrix` (effet « Matrix » en console) |
 | Démarrage | `cachyos-grub-theme` |
 
@@ -434,8 +434,6 @@ copie sur le système installé, XFCE ou Openbox, sauf le bouton du live)
 - `.config/xfce4/panel/launcher-31/live-fit-display.desktop` : bouton
   « Ajuster la résolution » du live.
 - `.bashrc`, `.bash_profile`.
-- `.config/smplayer/smplayer.ini` : interface personnalisée (`gui=SkinGUI`),
-  thème `Black`, style Qt `Fusion`, lecteur `mpv`.
 - `.config/geany/geany.conf` : réglages de Geany (police JetBrainsMono Nerd
   Font, thème `darcula`, barre d'outils masquée...), copiés d'une configuration
   personnelle, nom et adresse des modèles (`pref_template_*`) vidés, terminal
@@ -639,7 +637,7 @@ retire `/etc/xdg/calamares` du système installé.
   par groupe : base CachyOS (noyau `linux-cachyos` seul, microcode, outils
   CachyOS, réseau, pare-feu, bluetooth, son, polices, matériel…, **sans
   `alacritty` ni `micro`**) et **les applications du live communes aux deux
-  bureaux** (LightDM, Xorg, geany, smplayer, firefox et `firefox-i18n-fr`,
+  bureaux** (LightDM, Xorg, geany, nounours-player, firefox et `firefox-i18n-fr`,
   applications Packarch…). `$LOCALE` y est remplacé comme dans netinstall.
   La page **« Bureau »** (`packagechooser_desktop.conf`, méthode `packages`)
   ajoute les paquets du bureau choisi : celui du live pour **XFCE** (mêmes
@@ -662,7 +660,7 @@ retire `/etc/xdg/calamares` du système installé.
   numérique de LightDM, pas d'extinction de l'écran, hooks de Geany et des
   menus). `apply-live-config` ne copie que ce qui est propre à l'auteur et
   n'a pas sa place dans le dépôt public : la partie du `/etc/skel` du live
-  indépendante du bureau (`.bashrc`, `.bash_profile`, `geany.conf`, SMPlayer ;
+  indépendante du bureau (`.bashrc`, `.bash_profile`, `geany.conf` ;
   le reste contient les réglages XFCE, que `xfsettingsd` appliquerait sous
   Openbox, et le bouton propre au live). Avec Openbox, il relance ensuite
   `packarch-skin render / default` dans le système installé : le thème
@@ -1182,7 +1180,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
 | `archiso/airootfs/etc/pacman.d/hooks/90-cachyos-live-kwin-keyboard.hook` | supprimé |
 | `archiso/airootfs/etc/plasmalogin.conf`, `plasmalogin.conf.d/` | supprimés |
 | `archiso/airootfs/etc/skel/.config/` (réglages KDE) | supprimés |
-| `archiso/airootfs/etc/skel/.config/xfce4/panel/launcher-31/`, `smplayer/`, `geany/`, `.bashrc`, `.bash_profile` | ajoutés (le reste des réglages XFCE et le sélecteur de thèmes sont dans `packarch-xfce-settings`) |
+| `archiso/airootfs/etc/skel/.config/xfce4/panel/launcher-31/`, `geany/`, `.bashrc`, `.bash_profile` | ajoutés (le reste des réglages XFCE et le sélecteur de thèmes sont dans `packarch-xfce-settings`) |
 | `archiso/pacman.conf` | dépôt `[packarch]` (build) |
 | `archiso/airootfs/etc/pacman.conf`, `etc/pacman-more.conf` | dépôt `[packarch]` ; `CheckSpace` activé (vérifie la place disque avant d'installer, comme Arch ; commenté dans la configuration de CachyOS) |
 | `archiso/airootfs/etc/pacman.d/packarch-mirrorlist` | ajouté |

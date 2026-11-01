@@ -8,8 +8,8 @@
 # (LightDM greeter and numeric keypad, no screen blanking, Geany and menu
 # hooks) from packarch-system-settings. This script copies what is specific to
 # the author and not packaged in the public Packarch repository:
-#   - the desktop-independent part of the live /etc/skel (shells, Geany,
-#     SMPlayer), copied to the user's home at the end by Calamares
+#   - the desktop-independent part of the live /etc/skel (shells, Geany),
+#     copied to the user's home at the end by Calamares
 #   - passwordless sudo for the wheel group
 #   - the GitHub setup asked at the first login (github-setup: decrypts the
 #     personal archive, only the encrypted file is on the ISO)
@@ -24,7 +24,7 @@ user="${2:-}"
 # the XFCE settings of packarch-xfce-settings (already installed on the target
 # with XFCE; with Openbox, xfsettingsd also runs and would apply them) and the
 # live-only "Ajuster la résolution" panel launcher
-for f in .bash_profile .bashrc .config/smplayer .config/geany/geany.conf; do
+for f in .bash_profile .bashrc .config/geany/geany.conf; do
     [[ -e "/etc/skel/$f" ]] || continue
     mkdir -p "$root/etc/skel/$(dirname "$f")"
     cp -a "/etc/skel/$f" "$root/etc/skel/$f"
