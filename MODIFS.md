@@ -143,7 +143,7 @@ le live, le bouton « Ajuster la résolution » applique la taille de la fenêtr
 
 `run.sh` redirige le port 2222 de l'hôte (127.0.0.1 seulement) vers le SSH de
 la VM. `vm-themes.sh` échange par ce biais les thèmes
-(`~/.config/openbox/themes`) entre la VM et les sources de `packarch-openbox`
+(`~/.config/openbox/themes`) entre la VM et les sources de `packarch-openbox-settings`
 (`../myrepo-pkgs`) :
 
 ```bash
@@ -309,7 +309,7 @@ Packarch (sources : `myrepo-pkgs/packarch-xfce-settings`), installé sur le live
 et, avec XFCE, sur le système installé. C'est `cachyos-xfce-settings` 1.0.9
 (`/etc/skel` et GSettings) avec nos modifications déjà faites, plus le
 sélecteur de thèmes ([section 5](#5-sélecteur-de-thèmes)) : il le remplace
-(`replaces`/`conflicts`). Il est en conflit avec `packarch-openbox` (les deux
+(`replaces`/`conflicts`). Il est en conflit avec `packarch-openbox-settings` (les deux
 fournissent des fichiers de `/etc/skel` : GTK, Thunar, xfconf) ; un système
 installé a l'un ou l'autre.
 
@@ -355,7 +355,7 @@ de l'ISO à la fin.
     xfdesktop 4.20 ne lit plus).
 - **Thunar** (`thunar.xml`) : barre de menus cachée (Ctrl+M l'affiche) et
   entrée « Supprimer » (sans passer par la corbeille) dans le menu contextuel.
-  Même réglage dans le `thunar.xml` de `packarch-openbox`.
+  Même réglage dans le `thunar.xml` de `packarch-openbox-settings`.
 - **Geany comme éditeur** : `mimeapps.list` remplace `mousepad.desktop` par
   `geany.desktop`.
 - **Firefox au lieu de Cachy Browser** (absent de l'ISO) : bouton du tableau de
@@ -371,10 +371,12 @@ de l'ISO à la fin.
   `/usr/local/bin/live-fit-display` (`xrandr --output <écran> --auto`) : dans
   une machine virtuelle, applique la taille de la fenêtre, que XFCE n'applique
   pas tout seul. Absent du système installé, où le script n'existe pas.
-- **Thème « default » dès le démarrage** : `xsettings.xml` (thème GTK
-  `Arc-Dark`, icônes `Packarch` (dossiers violets, voir plus bas), curseur `Qogir-Dark` au lieu de
-  `capitaine-cursors`), `xfwm4.xml` (bordures `Arc-Dark`),
-  `xfce4-desktop.xml` (fond `default.png`), couleurs du terminal ajoutées à
+- **Thème « default » dès le démarrage** (thème `default` de `packarch-skin`
+  depuis 1.0.9-7, écrit par `packarch-skin render` à la construction, voir
+  section 5) : `xsettings.xml` (thème GTK `Packarch-Default`, icônes
+  `Packarch` (dossiers bleus), curseur `Pear-Dark` au lieu de
+  `capitaine-cursors`), `xfwm4.xml` (bordures `Packarch-Default`),
+  `xfce4-desktop.xml` (fond `wallpaper-alt.png`), couleurs du terminal ajoutées à
   `terminalrc` (xfce4-terminal les importe dans xfconf au premier lancement).
   Mêmes valeurs dans `.gtkrc-2.0`, `gtk-3.0/settings.ini`,
   `gtk-4.0/settings.ini`, `.icons/default/index.theme` (curseur) et la
@@ -386,8 +388,9 @@ de l'ISO à la fin.
   `BROWSER=firefox` dans `.profile` au lieu de `cachy-browser`. Le script
   d'installation de `cachyos-xfce-settings` (greeter LightDM `cachyos-nord`)
   n'est pas repris : le greeter est réglé par `packarch-system-settings`.
-- **Curseur `Qogir-Dark`** (fourni par `qogir-icon-theme`) : le sélecteur de
-  thèmes ne le change pas.
+- **Curseur** : celui du thème `packarch-skin` (`packarch-cursors`) depuis
+  1.0.9-7 ; `Qogir-Dark` (`qogir-icon-theme`) avant, inchangé par l'ancien
+  sélecteur de couleurs.
 - **DPI des polices fixé à 96** (1.0.9-2) : `/Xft/DPI` vaut 96 dans
   `xsettings.xml` au lieu d'être vide. Sans valeur, xfsettingsd calcule le
   DPI depuis l'écran : environ 70 avec le pilote NVIDIA (`UseEdidDpi`, voir
@@ -404,7 +407,7 @@ de l'ISO à la fin.
 - **cachy-update toujours installé** (XFCE et Openbox) : dépendance de
   `packarch-system-settings` (1.0-2). Son applet démarre à chaque session
   (`/etc/xdg/autostart/arch-update-tray.desktop` du paquet ; sous Openbox,
-  `snixembed` de `packarch-openbox` l'affiche dans polybar) et la
+  `snixembed` de `packarch-openbox-settings` l'affiche dans polybar) et la
   vérification quotidienne des mises à jour (`arch-update.timer`) est activée
   pour tous les utilisateurs par
   `/usr/lib/systemd/user/timers.target.wants/arch-update.timer`.
@@ -443,32 +446,46 @@ copie sur le système installé, XFCE ou Openbox, sauf le bouton du live)
 
 ## 5. Sélecteur de thèmes
 
-Repris de `~/.config/xfcethemes/` de l'auteur et installé pour tous les
-utilisateurs dans `/usr/share/xfcethemes/` par `packarch-xfce-settings` :
+Depuis `packarch-xfce-settings` 1.0.9-7, le bureau XFCE utilise **les mêmes
+thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
+`default`, `adaptive`, `cyberpunk`, `hacking`, `packarch`, `pink-city`,
+`pink-sylvanas`, `red-satanic`, `spark`, `yellow-flower`.
 
-- `theme-switcher.sh --<thème>` (`blue`, `gray`, `green`, `purple`, `red`,
-  `yellow`, `default`) : applique fond d'écran aléatoire du thème, thème GTK,
-  bordures, icônes et couleurs du terminal. Différences avec l'original :
-  - l'état (`.current_theme`, `.last_wallpaper/`) est enregistré dans
-    `~/.config/xfcethemes/`, `/usr/share` n'étant pas modifiable ;
-  - le fond d'écran est aussi écrit dans les réglages par nom d'écran de
-    xfdesktop 4.20 (`/backdrop/screen0/monitor<SORTIE>/workspace<N>/last-image`),
-    absents d'une session neuve ;
-  - le thème appliqué est placé en tête du lanceur du tableau de bord, qui
-    affiche ainsi le thème actif, y compris après redémarrage (cette dernière
-    modification a aussi été faite sur la machine de l'auteur) ;
-  - thème GTK du thème jaune : `Juno-Mirage` (nom actuel du thème, fourni par
-    `packarch-themes`).
+- les `theme.toml` de `packarch-openbox-settings` sont copiés à la construction dans
+  `/usr/share/xfcethemes/themes/<thème>/` (une seule source) ; sur XFCE
+  (`XDG_CURRENT_DESKTOP`, ou pas de thèmes Openbox), `packarch-skin apply
+  THÈME` règle le fond d'écran du thème (tous les réglages de xfdesktop, et
+  ceux par nom d'écran de xfdesktop 4.20,
+  `/backdrop/screen0/monitor<SORTIE>/workspace<N>/last-image`, absents d'une
+  session neuve), les thèmes GTK, xfwm4 (`[xfce] xfwm4_theme`, par défaut le
+  thème GTK ; `Default` pour `hacking`), d'icônes (avec `folder_color`,
+  `packarch-folder-color`) et de curseur, le `color-scheme`, les couleurs de
+  xfce4-terminal (palette du thème) et de Geany, et place le thème en tête du
+  lanceur du tableau de bord. Polices, barre et menus restent propres à
+  Openbox (`bar`, `font`, `openbox-menu` refusés sur XFCE).
+- le thème courant est dans `~/.config/xfcethemes/.current_theme` ;
+  `packarch-skin render` écrit le thème `default` dans le `/etc/skel` du
+  paquet (xsettings, xfwm4, xfce4-desktop, terminalrc, GTK 2/3/4,
+  `.icons/default`, surcharge GSettings), et `apply-live-config` le refait
+  sur le système installé, comme avec Openbox.
+- tableau de bord : lanceur `plugin-30` avec un élément par thème
+  (`launcher-30/theme-<thème>.desktop`, `packarch-skin apply <thème>`), icône
+  `/usr/share/xfcethemes/icons/<thème>.png` (miniature de son fond d'écran).
+- `theme-switcher.sh --<couleur>` ne fait plus que traduire les couleurs de
+  l'ancien sélecteur (lanceurs des utilisateurs existants) : `default` →
+  `default`, `blue` → `packarch`, `purple` → `pink-sylvanas`, `red` →
+  `red-satanic`, `yellow` → `yellow-flower`, `green` → `hacking`, `gray` →
+  `adaptive`.
 - `init-backdrop.sh` : lancé par `~/.xprofile` avant l'ouverture de la session
-  (LightDM). Crée le réglage du fond d'écran des écrans branchés s'il manque.
-  Sans lui, xfdesktop 4.20 affiche la souris XFCE : la configuration CachyOS
-  utilise l'ancien format `monitor0`, que xfdesktop supprime en le convertissant.
-- `icons/<thème>.png`. Les fonds d'écran sont dans le paquet
-  `packarch-backgrounds`, tous directement dans `/usr/share/backgrounds`
-  (depuis 2.0-3 : plus de sous-dossier `xfcethemes/<thème>/` ni de liens
-  symboliques, que nitrogen affichait en double sous Openbox) ;
-  `theme-switcher.sh` contient la liste des fichiers de chaque thème
-  (`WALLPAPERS`), le thème « default » utilise `xfce-default.png`.
+  (LightDM). Crée le réglage du fond d'écran des écrans branchés s'il manque
+  (fond du thème courant, `packarch-skin wallpaper`). Sans lui, xfdesktop 4.20
+  affiche la souris XFCE : la configuration CachyOS utilise l'ancien format
+  `monitor0`, que xfdesktop supprime en le convertissant. Une ancienne couleur
+  dans `.current_theme` est remplacée par le thème correspondant, appliqué une
+  fois la session ouverte.
+- conséquence : les deux bureaux utilisent les mêmes paquets de thèmes
+  (`packarch-themes`, `packarch-icons`, `packarch-backgrounds`,
+  `packarch-cursors`), voir ci-dessous ; l'ISO embarque aussi `packarch-cursors`.
 
 **Thèmes du dépôt Packarch** ([myrepo](https://github.com/packarch/myrepo)
 de l'auteur) :
@@ -485,16 +502,21 @@ de l'auteur) :
   ce qui ferait échouer l'installation du paquet (« existe déjà »).
 - paquets installés (live et système installé), un par catégorie (sources :
   [myrepo-pkgs](https://github.com/packarch/myrepo-pkgs)), réduits à ce
-  qu'utilise le bureau XFCE (sélecteur de thèmes, écran de connexion) :
-  `packarch-themes` (thèmes GTK `Arc-Dark`, `Dracula`, `Greybird-dark`,
-  `Gruvbox`, `Juno-Mirage`, `Nordic`, `Orchis-Red-Dark` ; live et bureau XFCE
-  seulement, par `packarch-xfce-settings` : `packarch-openbox` 7.0-45 n'en
-  dépend plus), `packarch-icons`
-  (`Packarch`, `Vimix-Black(-Dark)`, et `Packarch-Base(-Dark)`,
-  `Papirus-Apps` dont ils héritent ; dépend de `qogir-icon-theme` et
-  `papirus-icon-theme`), `packarch-backgrounds` (fonds du sélecteur,
-  `xfce-default.png`, `wallpaper-alt.png`). Les icônes se complètent par
-  héritage : `Packarch` → `Packarch-Base-Dark` → `Papirus-Apps`, `Papirus-Dark`.
+  qu'utilisent les 10 thèmes de `packarch-skin` (les mêmes sur Openbox et
+  XFCE) et l'écran de connexion — depuis la fusion de 2026-11-01, plus de
+  paquets `-openbox` :
+  - `packarch-themes` 2.0-7 : `Packarch-<Thème>` (GTK et xfwm4) et
+    `OB-Packarch-<Thème>` (Openbox), anciennement `packarch-themes-openbox` ;
+  - `packarch-icons` 2.0-9 : `Packarch`, `Hack`, `Luv-Folders(-Dark)`,
+    `Qogir-Pink-Dark`, et `Packarch-Base(-Dark)`, `Papirus-Apps` dont ils
+    héritent ; dépend de `qogir-icon-theme`, `papirus-icon-theme` et
+    `beautyline` (anciennement aussi `packarch-icons-openbox`) ;
+  - `packarch-backgrounds` 2.0-6 : les 10 fonds des thèmes, dont
+    `wallpaper-alt.png` (thème `default` et écran de connexion)
+    (anciennement aussi `packarch-backgrounds-openbox`) ;
+  - `packarch-cursors`.
+  Les icônes se complètent par héritage : `Packarch` → `Packarch-Base-Dark`
+  → `Papirus-Apps`, `Papirus-Dark`.
 - **un seul thème d'icônes Luna : `Packarch`** (`packarch-icons` 2.0-8,
   2026-10-31) : l'ancien `Luna-Antidote-Dark` (dossiers bleus `#0096ff`),
   rendu autonome. `Luna`, `Luna-Dark` et les `Luna-*-Dark` sont supprimés, et
@@ -506,28 +528,19 @@ de l'auteur) :
   (hérite de `Packarch`, dossiers recolorés, un seul à la fois).
   `packarch-skin` 1.0.0-18 l'appelle avec le `folder_color` des thèmes
   (`default`/`packarch` bleu, `red-satanic` rouge `#ff4747`, `pink-sylvanas`
-  violet `#a659ff`, `yellow-flower` jaune `#ffc86a`), le sélecteur XFCE aussi
-  (`packarch-xfce-settings` 1.0.9-6 : yellow, green `#00d96e`, purple, red,
-  blue, default violet ; gray reste `Vimix-Black-Dark`). `/etc/skel` et
-  l'écran de connexion utilisent `Packarch` tel quel (bleu) ; sur XFCE,
-  `init-backdrop.sh` (`.xprofile`) applique le violet du thème `default` à la
-  première session, et remplace un ancien thème `Luna-*` par `Packarch` de
-  même couleur.
-- ce que seul Openbox utilise est dans `packarch-themes-openbox` (un thème
-  GTK `Packarch-<Thème>` et un thème Openbox `OB-Packarch-<Thème>` par thème
-  de `packarch-skin`, voir la section 6), `packarch-icons-openbox` (`Hack`,
-  `Luv-Folders(-Dark)`, `Qogir-Pink-Dark`, avec `beautyline`) et
-  `packarch-backgrounds-openbox`,
-  dépendances de `packarch-openbox` 7.0-31 : l'ISO (live XFCE) ne les
-  embarque pas, Calamares les installe seulement avec le bureau Openbox
-  (environ 170 Mo installés et 35 Mo compressés de moins sur le live).
-- les 12 thèmes d'icônes utilisés par aucun thème (Arc-Circle, Luna-Light,
-  Nordic-Folders(-Bluish, -Green), Numix-Apps(-White), Vimix-White(-Dark),
-  White-Folders, Win11(-Dark)) sont dans `packarch-icons-extra`, gardé dans
-  [packarch] mais installé nulle part (`sudo pacman -S packarch-icons-extra`).
-  `Vimix-Black` reste dans `packarch-icons` : `Vimix-Black-Dark` pointe vers
-  ses dossiers par des liens symboliques. `Luna-Light` a ses propres copies
-  des icônes de `Luna` depuis `packarch-icons-extra` 2.0-3.
+  violet `#a659ff`, `yellow-flower` jaune `#ffc86a`), sur Openbox et, depuis
+  `packarch-xfce-settings` 1.0.9-7, sur XFCE. `/etc/skel` et l'écran de
+  connexion utilisent `Packarch` tel quel (bleu, celui du thème `default`).
+- ce qu'aucun thème n'utilise est dans **`packarch-extra`** (anciennement
+  `packarch-icons-extra`), gardé dans [packarch] mais installé nulle part
+  (`sudo pacman -S packarch-extra`) : 14 thèmes d'icônes (Arc-Circle,
+  Luna-Light, Nordic-Folders(-Bluish, -Green), Numix-Apps(-White),
+  Vimix-Black(-Dark), Vimix-White(-Dark), White-Folders, Win11(-Dark)), les
+  thèmes GTK de l'ancien sélecteur XFCE (Arc-Dark, Dracula, Greybird-dark,
+  Gruvbox, Juno-Mirage, Nordic, Orchis-Red-Dark) et les anciens fonds
+  d'écran (sélecteur XFCE, `xfce-default.png`, anciens thèmes Openbox).
+  `Luna-Light` a ses propres copies des icônes de `Luna` depuis
+  `packarch-icons-extra` 2.0-3.
 - plus aucun thème, icône ni fond d'écran n'est copié à la main dans
   `airootfs` (ni copié par `apply-live-config`).
 
@@ -616,7 +629,7 @@ retire `/etc/xdg/calamares` du système installé.
   La page **« Bureau »** (`packagechooser_desktop.conf`, méthode `packages`)
   ajoute les paquets du bureau choisi : celui du live pour **XFCE** (mêmes
   paquets que l'ISO, dont `packarch-xfce-settings` : réglages et sélecteur de
-  thèmes), `packarch-openbox` et les greffons Thunar pour **Openbox**.
+  thèmes), `packarch-openbox-settings` et les greffons Thunar pour **Openbox**.
   Les logiciels optionnels (Discord, FileZilla, LibreOffice en français,
   GIMP, Steam, Bombicat, rustup, Qt Creator, KeePassXC, Deadpool,
   impression CUPS, accessibilité) s'installent après l'installation avec
@@ -628,7 +641,7 @@ retire `/etc/xdg/calamares` du système installé.
   `/usr/local/bin/apply-live-config` (fourni par l'ISO). Il reconnaît le bureau
   choisi aux paquets installés (`openbox` sans `xfce4-session` : Openbox).
   Les réglages du bureau viennent de son paquet (`packarch-xfce-settings`, ou
-  `packarch-openbox`, qui fait aussi d'Openbox la session par défaut de
+  `packarch-openbox-settings`, qui fait aussi d'Openbox la session par défaut de
   LightDM : `/etc/lightdm/lightdm.conf.d/60-packarch-openbox.conf`), ceux
   communs aux deux bureaux de `packarch-system-settings` (greeter et pavé
   numérique de LightDM, pas d'extinction de l'écran, hooks de Geany et des
@@ -639,7 +652,7 @@ retire `/etc/xdg/calamares` du système installé.
   Openbox, et le bouton propre au live). Avec Openbox, il relance ensuite
   `packarch-skin render / default` dans le système installé : le thème
   default a été écrit dans `/etc/skel` à la construction de
-  `packarch-openbox`, sans ce `geany.conf` (couleurs XFCE) ; la première
+  `packarch-openbox-settings`, sans ce `geany.conf` (couleurs XFCE) ; la première
   session a ainsi le thème default partout, sans `packarch-skin apply`
   (`/etc/skel` est copié dans le dossier personnel à la fin, par l'étape
   `shellprocess`). Il crée aussi `/etc/sudoers.d/90-wheel-nopasswd`
@@ -678,7 +691,9 @@ retire `/etc/xdg/calamares` du système installé.
 
 ### Bureau Openbox (Packarch)
 
-Le choix « Openbox » installe `packarch-openbox` depuis [packarch] (sources :
+Le choix « Openbox » installe `packarch-openbox-settings` (anciennement
+`packarch-openbox`, renommé en 7.0-72 comme `packarch-xfce-settings` ;
+`replaces`/`provides`) depuis [packarch] (sources :
 [myrepo-pkgs](https://github.com/packarch/myrepo-pkgs), licence GPL3) :
 polybar, menus rofi, dunst, picom, kitty et 10 thèmes, changés depuis
 le menu du bureau. La configuration est reprise de la version GPL3 de la
@@ -690,16 +705,19 @@ utilisée. Ses dépendances sont aussi dans [packarch] : `packarch-skin`,
 (`nitrogen`, `xfce-polkit`, `lead-git`, `skippy-xd-git`, `ksuperkey`,
 `betterlockscreen`, `networkmanager-dmenu-git`, `light`…). L'ancien
 `packarch-openbox-extras` (`packarch-tcma`, `packarch-reload-theme`, icônes de
-dunst) est fusionné dans `packarch-openbox` depuis la 7.0-16 (`replaces`) ;
+dunst) est fusionné dans `packarch-openbox-settings` depuis la 7.0-16 (`replaces`) ;
 ses illustrations (`/usr/share/packarch/artworks`), utilisées nulle part, sont
 supprimées.
 
-**Sélecteur de thèmes `packarch-skin`** (Rust, sources dans
-`myrepo-pkgs/packarch-skin`) : chaque thème est un dossier de
+**Sélecteur de thèmes `packarch-skin`** (Rust, dépôt
+[packarch-skin](https://github.com/packarch/packarch-skin) depuis 1.1.0, à
+côté de `packarch-hello` et `packarch-pi` ; paquet construit par
+`myrepo-pkgs/apps/packarch-skin` depuis le tag ; sources dans
+`myrepo-pkgs/packarch-skin` avant) : chaque thème est un dossier de
 `~/.config/openbox/themes` avec ses dispositions (`polybar/`, `rofi/`)
 et un `theme.toml` qui le décrit : fond d'écran (`wallpaper =
 "/usr/share/backgrounds/…"`, chemin réel au lieu du lien `wallpaper` du
-dossier depuis packarch-openbox 7.0-25 ; changer le fond d'un thème = changer
+dossier depuis packarch-openbox-settings 7.0-25 ; changer le fond d'un thème = changer
 cette ligne), couleurs
 (valeurs, références à d'autres couleurs, `lighten()`/`darken()`), rôles des
 couleurs dans la barre, rofi et dunst, polices, thèmes GTK/icônes/curseur,
@@ -710,7 +728,7 @@ thème et marges d'Openbox, dunst, picom. Il remplace les scripts
 | Commande | Effet |
 |---|---|
 | `packarch-skin apply [THÈME]` | applique un thème (par défaut le courant) : fichiers de couleurs de polybar et rofi, kitty, Geany, GTK (xfconf, gsettings), `rc.xml` d'Openbox, dunst, picom, fond d'écran (nitrogen), puis relance la barre |
-| `packarch-skin render RACINE [THÈME]` | écrit le thème (par défaut `default`) dans les fichiers de `RACINE/etc/skel`, sans rien lancer : xfconf dans `xsettings.xml`, fond dans `nitrogen/bg-saved.cfg`, `color-scheme` dans `RACINE/usr/share/glib-2.0/schemas/25_packarch-openbox.gschema.override` ; utilisé par le PKGBUILD de `packarch-openbox` (1.0.0-9) |
+| `packarch-skin render RACINE [THÈME]` | écrit le thème (par défaut `default`) dans les fichiers de `RACINE/etc/skel`, sans rien lancer : xfconf dans `xsettings.xml`, fond dans `nitrogen/bg-saved.cfg`, `color-scheme` dans `RACINE/usr/share/glib-2.0/schemas/25_packarch-openbox.gschema.override` ; utilisé par le PKGBUILD de `packarch-openbox-settings` (1.0.0-9) |
 | `packarch-skin bar` | relance les barres polybar du thème courant (`bars` de `[polybar]` dans `theme.toml`, `main` par défaut) ; détecte au premier lancement de polybar la batterie, l'adaptateur, le rétroéclairage et l'interface réseau (`/sys`) |
 | `packarch-skin list`, `current`, `wallpaper`, `check` | thèmes, thème courant, fond d'écran, vérification des `theme.toml` |
 | `packarch-skin openbox-menu` | menu « Changer de style » d'Openbox |
@@ -855,7 +873,7 @@ Modifications de la configuration d'origine :
 - **Zafiro retiré** (`packarch-icons` 2.0-4) : les 12 variantes (environ
   145 Mo), utilisées par aucun thème ; les valeurs initiales de `/etc/skel`
   (`xsettings.xml`, `gtk-3.0/settings.ini`, `.gtkrc-2.0`, `rofi/config.rasi`
-  de `packarch-openbox`) passent à Luna-Antidote-Dark (thème `default`) ;
+  de `packarch-openbox-settings`) passent à Luna-Antidote-Dark (thème `default`) ;
 - **`Qogir-Pink-Dark`** (`packarch-icons` 2.0-4) : les icônes de dossiers
   (`places`, 16 à 128 px et `scalable`) de Qogir-Dark (GPL3) recolorées dans
   le rose du fond `tokyo.png` (`#6ba4e7` → `#da6e89`, `#5294e2` → `#d0607f`,
@@ -925,7 +943,7 @@ Modifications de la configuration d'origine :
   `&` du remplacement de `${var//motif/remplacement}` vaut le texte trouvé :
   `XMLescape` produisait `'apos;` au lieu de `&apos;` (libellés et commandes
   des sous-menus contenant `'`, `"`, `<` ou `>` cassés) ;
-- **thème `default` déjà appliqué dans `/etc/skel`** (`packarch-openbox`
+- **thème `default` déjà appliqué dans `/etc/skel`** (`packarch-openbox-settings`
   7.0-32) : le PKGBUILD lance `packarch-skin render "$pkgdir" default`
   (`makedepends`, installé puis retiré par `build.sh`, qui construit
   `packarch-skin` en premier). La première session démarre directement avec
@@ -942,7 +960,7 @@ Modifications de la configuration d'origine :
   deux instances donnaient « An authentication agent already exists » ;
 - fichiers XML de xfconf et Thunar : le commentaire de copyright placé avant
   la déclaration XML est retiré ;
-- **polices globales** (`packarch-skin` 1.0.0-11, `packarch-openbox`
+- **polices globales** (`packarch-skin` 1.0.0-11, `packarch-openbox-settings`
   7.0-38) : `~/.config/openbox/themes/fonts.toml` (clés de la section
   `[fonts]`, toutes optionnelles) remplace les polices de chaque thème, qui
   ne changent donc plus avec le thème. `packarch-skin font [CIBLE [FAMILLE
@@ -968,21 +986,23 @@ Modifications de la configuration d'origine :
   rôle, le fichier est supprimé. `red-satanic` : `fastfetch = "color3"`, et
   son vert du terminal (`color2`, `color10`) devient jaune (7.0-43) ;
 - **un thème GTK et un thème Openbox par thème** (`packarch-themes-openbox`
-  2.0-5 et 2.0-6, `packarch-openbox` 7.0-44) : `Packarch-<Thème>` et
+  2.0-5 et 2.0-6, fusionné dans `packarch-themes` 2.0-7, `packarch-openbox-settings` 7.0-44) : `Packarch-<Thème>` et
   `OB-Packarch-<Thème>`, pour qu'une modification ne touche qu'un thème
   (Manhattan était partagé par `packarch` et `pink-city`). Les originaux ont
   été renommés (Satanic, OB-Kripton, Manhattan, Sweet-Dark…) ; Arc-Dark et
   Juno-Mirage, qui servent aussi au bureau XFCE, restent dans
   `packarch-themes` et ont été copiés. La correspondance est dans le
-  PKGBUILD de `packarch-themes-openbox`. Les autres thèmes GTK et Openbox,
+  PKGBUILD de `packarch-themes`. Les autres thèmes GTK et Openbox,
   utilisés par aucun thème, ont été retirés avec la dépendance
   `sweet-gtk-theme` (193 Mo de thèmes ramenés à 59 Mo). Couleurs modifiées
   pour `red-satanic` : accent orange `#f7901e` en GTK au lieu du gris bleuté
   `#9bbfbf`, et rouge `#d7263d` en Openbox ;
-- **plus de `packarch-themes`** (7.0-45) : ses thèmes GTK ne servent qu'au
+- **plus de `packarch-themes`** (7.0-45) : ses thèmes GTK ne servaient qu'au
   bureau XFCE. L'écran de connexion, commun aux deux bureaux, a son propre
   thème `Packarch-Greeter` (`packarch-system-settings` 1.0-4), et
-  `packarch-themes` sort du groupe commun de `packages_online.conf` ;
+  `packarch-themes` sort du groupe commun de `packages_online.conf`. Depuis
+  7.0-72, `packarch-themes` (2.0-7) contient les thèmes de `packarch-skin`
+  et redevient une dépendance, à la place de `packarch-themes-openbox` ;
 - pas de script `.install` : Calamares copie lui-même `/etc/skel`.
 
 `calamares-online.sh` (lancé par Packarch Hello) garde le rafraîchissement du

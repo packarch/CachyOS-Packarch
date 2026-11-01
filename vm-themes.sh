@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Échange les thèmes Openbox (~/.config/openbox/themes) entre les sources de
-# packarch-openbox (../myrepo-pkgs) et la VM lancée par ./run.sh -i, par SSH
+# packarch-openbox-settings (../myrepo-pkgs) et la VM lancée par ./run.sh -i, par SSH
 # (port 2222 de l'hôte).
 #
 # Usage : ./vm-themes.sh setup UTILISATEUR   une fois par installation
@@ -33,7 +33,7 @@ set -euo pipefail
 
 src_dir=$(dirname "$(readlink -f "$0")")
 vm_dir="${src_dir}/vm-test"
-themes_src="$(readlink -f "${src_dir}/../myrepo-pkgs")/packarch-openbox/files/etc/skel/.config/openbox/themes"
+themes_src="$(readlink -f "${src_dir}/../myrepo-pkgs")/packarch-openbox-settings/files/etc/skel/.config/openbox/themes"
 user_file="${vm_dir}/ssh-user"
 pulled="${vm_dir}/themes"
 base="${vm_dir}/themes-base"

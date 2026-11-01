@@ -68,7 +68,7 @@ cd CachyOS-Packarch
    chaque modification du patch ; `./build.sh -f` force la recompilation) ;
 2. `sudo scripts/buildiso.sh -p desktop -w` : construit l'ISO.
 
-Le bureau Openbox (`packarch-openbox`, `packarch-skin`), les thèmes, icônes et
+Le bureau Openbox (`packarch-openbox-settings`, `packarch-skin`), les thèmes, icônes et
 fonds d'écran viennent du dépôt [packarch]
 ([myrepo-pkgs](https://github.com/packarch/myrepo-pkgs)) : le publier avant
 de construire l'ISO.
@@ -106,7 +106,7 @@ L'installation en ligne demande une connexion Internet et télécharge environ
 
 Le port 2222 de l'hôte mène au SSH de la VM (à activer dans la VM :
 `sudo systemctl enable --now sshd` puis `sudo ufw allow ssh`). `vm-themes.sh` s'en sert pour échanger
-les thèmes Openbox entre la VM et les sources de `packarch-openbox` :
+les thèmes Openbox entre la VM et les sources de `packarch-openbox-settings` :
 
 ```bash
 ./vm-themes.sh setup UTILISATEUR   # une fois par installation (clé SSH)

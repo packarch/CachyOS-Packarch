@@ -3,7 +3,7 @@
 # apply-live-config ROOT [USER] — run by Calamares (shellprocess@live_config,
 # not chrooted) during the online installation, once the packages are
 # installed in ROOT and USER is created. The settings of the desktop come from
-# its package (packarch-xfce-settings or packarch-openbox, which also makes
+# its package (packarch-xfce-settings or packarch-openbox-settings, which also makes
 # Openbox the default LightDM session), the ones common to both desktops
 # (LightDM greeter and numeric keypad, no screen blanking, Geany and menu
 # hooks) from packarch-system-settings. This script copies what is specific to
@@ -31,7 +31,7 @@ for f in .bash_profile .bashrc .config/smplayer .config/geany/geany.conf; do
 done
 
 # With Openbox, the default theme was rendered into /etc/skel when
-# packarch-openbox was built, without the geany.conf copied above (XFCE
+# packarch-openbox-settings was built, without the geany.conf copied above (XFCE
 # colors). Rendered again so that the first session already has the default
 # theme everywhere (/etc/skel is copied to the home at the end by Calamares)
 if [[ -x "$root/usr/bin/packarch-skin" ]]; then
