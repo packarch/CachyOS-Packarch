@@ -96,7 +96,14 @@ sudo pacman -S --needed qemu-desktop edk2-ovmf virt-viewer
 ./run.sh                   # live (ISO la plus récente de out/)
 ./run.sh -i                # système installé sur le disque virtuel
 ./run.sh --iso FICHIER     # live d'une ISO précise
+./run.sh --cpu host        # processeur de l'hôte au lieu de Nehalem
 ```
+
+La VM voit par défaut un processeur `Nehalem` (niveau x86-64-v2, sans AVX),
+pour tester l'installation et les paquets comme sur un ordinateur quelconque.
+Avec `--cpu host`, l'installateur choisit les dépôts du processeur de l'hôte
+(`znver4` sur un Ryzen 7000). Un système installé ainsi ne démarre pas sur un
+modèle de niveau inférieur : garder le même `--cpu` avec `-i`.
 
 Le disque virtuel (30 Go) et les variables UEFI sont conservés dans
 `vm-test/` d'un lancement à l'autre. L'affichage passe par SPICE, dans
