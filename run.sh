@@ -6,9 +6,17 @@
 # Usage : ./run.sh                    live (ISO la plus récente de out/)
 #         ./run.sh -i | --installe    système installé sur le disque virtuel
 #         ./run.sh --iso FICHIER      live d'une ISO précise
+#         ./run.sh --cpu MODELE ...   modèle de processeur (défaut : Nehalem)
 #
 # Le disque virtuel (vm-test/disque.qcow2, 30 Go, créé s'il manque) et les
 # variables UEFI (vm-test/OVMF_VARS.fd) sont conservés entre deux lancements.
+#
+# Processeur : Nehalem (niveau x86-64-v2, sans AVX) par défaut, pour tester
+# comme sur un ordinateur quelconque : avec -cpu host, l'installateur choisit
+# les dépôts du processeur de l'hôte (znver4) et un binaire qui exige AVX-512
+# passe inaperçu. --cpu host redonne le processeur de l'hôte. Un système
+# installé avec un processeur donné ne démarre pas sur un modèle de niveau
+# inférieur : garder le même --cpu avec -i que pendant l'installation.
 #
 # SSH : le port 2222 de l'hôte (127.0.0.1 seulement) mène au port 22 de la
 # VM (à activer dans la VM : sudo systemctl enable --now sshd, puis
@@ -33,16 +41,18 @@ ovmf_vars_tpl=/usr/share/edk2/x64/OVMF_VARS.4m.fd
 ovmf_vars="${vm_dir}/OVMF_VARS.fd"
 
 usage() {
-    sed -n '3,9s/^# \{0,1\}//p' "$0"
+    sed -n '3,10s/^# \{0,1\}//p' "$0"
     exit "$1"
 }
 
 mode=live
 iso=""
+cpu=Nehalem
 while (( $# )); do
     case "$1" in
         -i|--installe) mode=installe ;;
         --iso) iso="${2:?--iso demande un fichier}"; shift ;;
+        --cpu) cpu="${2:?--cpu demande un modèle (qemu-system-x86_64 -cpu help)}"; shift ;;
         -h|--help) usage 0 ;;
         *) usage 1 ;;
     esac
@@ -80,7 +90,9 @@ else
                -device ide-cd,drive=cd0,bootindex=0 -boot menu=on)
 fi
 
-exec qemu-system-x86_64 -enable-kvm -machine q35 -cpu host -smp 4 -m 6G \
+echo "Processeur de la VM : ${cpu}"
+
+exec qemu-system-x86_64 -enable-kvm -machine q35 -cpu "${cpu}" -smp 4 -m 6G \
     -drive if=pflash,format=raw,readonly=on,file="${ovmf_code}" \
     -drive if=pflash,format=raw,file="${ovmf_vars}" \
     -drive file="${disk}",if=none,format=qcow2,id=hd0 \
