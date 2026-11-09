@@ -710,7 +710,12 @@ d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+T
 ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme la barre du thème `packarch`
 d'Openbox, waybar a le menu des applications à gauche, les lanceurs au centre
 (Firefox, Thunar, kitty, et Discord, FileZilla, MKVToolNix, FileBot s'ils sont
-installés) et le bouton d'extinction à droite (1.0-3). `packarch-skin` 1.3.1
+installés) et le bouton d'extinction à droite (1.0-3). Depuis la 1.0-11, le
+bureau tourne sur **SwayFX** (dépôt `cachyos`, fournit `sway`) : coins
+arrondis et ombres des fenêtres, repris des réglages picom du thème
+(`corner_radius`, `shadow_radius`, `shadow_opacity`) par `packarch-skin`
+1.3.2, comme sous Openbox (0 pour adaptive, hacking, pink-city et
+yellow-flower, 6 px pour les autres). `packarch-skin` 1.3.1
 n'ouvre qu'un sélecteur de thèmes à la fois, sur tous les bureaux (menu
 « Thèmes Packarch » de XFCE compris). Comme sur les
 autres bureaux : pas de verrouillage ni d'extinction de l'écran par
