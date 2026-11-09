@@ -104,9 +104,10 @@ Presentation
     }
 
     PackarchSlide {
-        title: "Deux bureaux au choix"
-        body: "Le bureau <b>XFCE</b> que vous utilisez en ce moment, ou le bureau " +
-              "<b>Openbox</b> de Packarch, léger, avec polybar, rofi et dunst."
+        title: "Trois bureaux au choix"
+        body: "Le bureau <b>XFCE</b> que vous utilisez en ce moment, le bureau " +
+              "<b>Openbox</b> de Packarch, léger, avec polybar, rofi et dunst, ou " +
+              "<b>Sway</b>, sous Wayland, avec ses fenêtres en mosaïque."
     }
 
     PackarchSlide {

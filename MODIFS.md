@@ -3,7 +3,8 @@
 Ce dépôt est dérivé de [cachyos-live-iso](https://github.com/cachyos/cachyos-live-iso).
 L'ISO officielle démarre sur KDE Plasma ; celle-ci démarre sur **XFCE, en français**,
 avec un sélecteur de thèmes, et son installeur installe, **en ligne et à jour**,
-au choix **ce même bureau XFCE** ou **le bureau Openbox de Packarch**.
+au choix **ce même bureau XFCE**, **le bureau Openbox de Packarch** ou
+**son bureau Sway** (Wayland, depuis le 2026-11-09).
 
 **Nom : Packarch.** Depuis le 2026-10-30, l'ISO porte le nom de Packarch partout
 où ce n'est pas un nom de CachyOS dont dépend le système : menus de GRUB,
@@ -611,9 +612,10 @@ retire `/etc/xdg/calamares` du système installé.
 `pacstrap`, choix du chargeur de démarrage, etc.) avec ces changements :
 
 - **Page « Bureau »** (`packagechooser@desktop`, avant « Paquets ») réduite à
-  deux choix : **XFCE** (par défaut, le bureau du live) ou **Openbox** (celui
-  de Packarch, voir [Bureau Openbox](#bureau-openbox-packarch)). Le live, lui,
-  démarre toujours sur XFCE.
+  trois choix : **XFCE** (par défaut, le bureau du live), **Openbox** (celui
+  de Packarch, voir [Bureau Openbox](#bureau-openbox-packarch)) ou **Sway**
+  (voir [Bureau Sway](#bureau-sway-packarch)). Le live, lui, démarre toujours
+  sur XFCE.
 - **`shellprocess@initialize_pacman`** copie aussi
   `/etc/pacman.d/packarch-mirrorlist` sur le système installé, avec les
   listes de miroirs CachyOS : pacstrap et pacman y lisent le `pacman.conf` du
@@ -689,6 +691,51 @@ retire `/etc/xdg/calamares` du système installé.
   personnel).
 - `packages_online.conf` (options d'origine) fait un `pacman -Syu` après l'installation
   des paquets : **le système installé est à jour**.
+
+### Bureau Sway (Packarch)
+
+Le choix « Sway » (ajouté le 2026-11-09) installe `packarch-sway-settings`
+depuis [packarch] (sources : `myrepo-pkgs/packarch-sway-settings`) et les
+greffons de Thunar. La configuration reprend celle de Sway d'Aditya Shakya,
+dans sa version **GPL3** (`archcraft-sway-free`,
+[archcraft-sway](https://github.com/archcraft-os/archcraft-sway)) : celle
+d'Archcraft Prime (`archcraft-sway`, licence DBAD) interdit la redistribution
+et n'a servi que de modèle (elle n'en diffère que par les couleurs, wofi et
+wlogout). Barre waybar, menus rofi (lanceur, alimentation, captures, réseau,
+Bluetooth, « lancer en root »), notifications mako, verrouillage hyprlock,
+aperçu des bureaux sov (AUR, copie dans `myrepo-pkgs/aur/sov`), **kitty seul**
+(ni alacritty ni foot), en français. Pas de Spotify/mpd (touches multimédia :
+playerctl), pas de pywal ni de mode clair : les **mêmes 10 thèmes et fonds
+d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+T
+ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme sur les
+autres bureaux : pas de verrouillage ni d'extinction de l'écran par
+inactivité (seulement avant la mise en veille), pavé numérique activé.
+
+- **Session** : un hook pacman remplace l'`Exec` de
+  `/usr/share/wayland-sessions/sway.desktop` par `packarch-run-sway`
+  (variables de Wayland d'Archcraft, `--unsupported-gpu` avec le pilote
+  NVIDIA, disposition du clavier du système lue par `localectl` :
+  `XKB_DEFAULT_LAYOUT`…, `KITTY_CONFIG_DIRECTORY` sur la configuration kitty
+  de Sway) ; `60-packarch-sway.conf` fait de Sway la session par défaut de
+  LightDM.
+- **Autostart** : `dex` lance les entrées de `/etc/xdg/autostart`
+  (cachy-update, xfce-polkit, configuration de GitHub, dont
+  `OnlyShowIn` contient maintenant `sway`) ; `~/.config/autostart` cache
+  picom (compositeur X) et le nm-applet sans `--indicator` sous Sway.
+- **Thèmes** : les `theme.toml` d'Openbox sont copiés à la construction dans
+  `/usr/share/packarch/sway/themes` (miniatures dans
+  `/usr/share/packarch/sway/icons`). `packarch-skin apply` écrit le fond
+  d'écran (`sway-output`), les couleurs des fenêtres et les thèmes GTK,
+  d'icônes (couleur des dossiers comprise) et de curseur (`sway-theme`,
+  remis par gsettings à chaque démarrage de Sway), les couleurs de waybar,
+  rofi, mako, kitty, hyprlock et Geany, puis `swaymsg reload` ;
+  `render` écrit le thème `default` dans `/etc/skel` à la construction, et
+  `apply-live-config` le refait sur le système installé, comme avec Openbox.
+  Thème courant : `~/.config/sway/.current_theme`.
+- `packarch-sway-settings` n'a aucun fichier en commun avec
+  `packarch-openbox-settings` ni `packarch-xfce-settings` : il peut être
+  installé à côté (terminal des applications `Terminal=true` :
+  `/etc/xdg/sway-xdg-terminals.list`).
 
 ### Bureau Openbox (Packarch)
 
@@ -1196,7 +1243,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
   paquets `-git` (`lead-git`, `skippy-xd-git`, `networkmanager-dmenu-git`)
   prennent la version du jour de leur compilation. Les captures d'écran de la
   page « Bureau » sont celles de CachyOS (`/etc/calamares/images/xfce.jxl`,
-  `openbox.jxl`).
+  `openbox.jxl`, `sway.jxl`).
 - **Mise à jour de Calamares** : notre version ne suit pas automatiquement
   celle de CachyOS (voir [Mettre à jour Calamares](#mettre-à-jour-calamares)).
 

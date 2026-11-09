@@ -3,6 +3,6 @@ Type=Application
 Name=Configuration de GitHub
 Comment=Déchiffre la clé SSH GitHub et lance gitconfig.sh
 Exec=/usr/local/bin/github-setup
-OnlyShowIn=XFCE;OPENBOX;
+OnlyShowIn=XFCE;OPENBOX;sway;
 NoDisplay=true
 X-GNOME-Autostart-enabled=true
