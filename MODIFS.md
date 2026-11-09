@@ -707,7 +707,11 @@ aperçu des bureaux sov (AUR, copie dans `myrepo-pkgs/aur/sov`), **kitty seul**
 (ni alacritty ni foot), en français. Pas de Spotify/mpd (touches multimédia :
 playerctl), pas de pywal ni de mode clair : les **mêmes 10 thèmes et fonds
 d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+T
-ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme sur les
+ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme la barre du thème `packarch`
+d'Openbox, waybar a le menu des applications à gauche, les lanceurs au centre
+(Firefox, Thunar, kitty, et Discord, FileZilla, MKVToolNix, FileBot s'ils sont
+installés) et le bouton d'extinction à droite (1.0-3) ; un seul sélecteur de
+thèmes à la fois (`flock`). Comme sur les
 autres bureaux : pas de verrouillage ni d'extinction de l'écran par
 inactivité (seulement avant la mise en veille), pavé numérique activé.
 
