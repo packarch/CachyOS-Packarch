@@ -710,8 +710,9 @@ d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+T
 ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme la barre du thème `packarch`
 d'Openbox, waybar a le menu des applications à gauche, les lanceurs au centre
 (Firefox, Thunar, kitty, et Discord, FileZilla, MKVToolNix, FileBot s'ils sont
-installés) et le bouton d'extinction à droite (1.0-3) ; un seul sélecteur de
-thèmes à la fois (`flock`). Comme sur les
+installés) et le bouton d'extinction à droite (1.0-3). `packarch-skin` 1.3.1
+n'ouvre qu'un sélecteur de thèmes à la fois, sur tous les bureaux (menu
+« Thèmes Packarch » de XFCE compris). Comme sur les
 autres bureaux : pas de verrouillage ni d'extinction de l'écran par
 inactivité (seulement avant la mise en veille), pavé numérique activé.
 
