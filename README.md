@@ -97,7 +97,12 @@ sudo pacman -S --needed qemu-desktop edk2-ovmf virt-viewer
 ./run.sh -i                # système installé sur le disque virtuel
 ./run.sh --iso FICHIER     # live d'une ISO précise
 ./run.sh --cpu host        # processeur de l'hôte au lieu de Nehalem
+./run.sh -a                # QEMU attaché au terminal (messages, Ctrl+C)
 ```
+
+QEMU est détaché du terminal : on peut fermer celui-ci, la VM continue (ses
+messages vont dans `vm-test/qemu.log`). `run.sh` refuse de lancer une seconde
+VM sur le même disque, et affiche l'erreur si QEMU s'arrête au démarrage.
 
 La VM voit par défaut un processeur `Nehalem` (niveau x86-64-v2, sans AVX),
 pour tester l'installation et les paquets comme sur un ordinateur quelconque.

@@ -7,6 +7,11 @@
 #         ./run.sh -i | --installe    système installé sur le disque virtuel
 #         ./run.sh --iso FICHIER      live d'une ISO précise
 #         ./run.sh --cpu MODELE ...   modèle de processeur (défaut : Nehalem)
+#         ./run.sh -a | --attache ... QEMU reste attaché au terminal
+#
+# QEMU est détaché du terminal (setsid) : on peut fermer celui-ci, la VM
+# continue. Ses messages vont dans vm-test/qemu.log ; -a le garde attaché
+# (messages dans le terminal, Ctrl+C l'arrête), comme avant.
 #
 # Le disque virtuel (vm-test/disque.qcow2, 30 Go, créé s'il manque) et les
 # variables UEFI (vm-test/OVMF_VARS.fd) sont conservés entre deux lancements.
@@ -41,16 +46,18 @@ ovmf_vars_tpl=/usr/share/edk2/x64/OVMF_VARS.4m.fd
 ovmf_vars="${vm_dir}/OVMF_VARS.fd"
 
 usage() {
-    sed -n '3,10s/^# \{0,1\}//p' "$0"
+    sed -n '3,15s/^# \{0,1\}//p' "$0"
     exit "$1"
 }
 
 mode=live
 iso=""
 cpu=Nehalem
+attach=false
 while (( $# )); do
     case "$1" in
         -i|--installe) mode=installe ;;
+        -a|--attache) attach=true ;;
         --iso) iso="${2:?--iso demande un fichier}"; shift ;;
         --cpu) cpu="${2:?--cpu demande un modèle (qemu-system-x86_64 -cpu help)}"; shift ;;
         -h|--help) usage 0 ;;
@@ -68,6 +75,13 @@ if ! command -v qemu-system-x86_64 &>/dev/null || ! command -v qemu-img &>/dev/n
 fi
 
 mkdir -p "${vm_dir}"
+log="${vm_dir}/qemu.log"
+
+# Une VM tourne déjà sur ce disque (QEMU refuserait de l'ouvrir)
+if pid=$(pgrep -f -- "file=${disk}," | head -1) && [[ -n ${pid} ]]; then
+    echo "Une VM utilise déjà ${disk} (QEMU, PID ${pid})." >&2
+    exit 1
+fi
 [[ -f "${disk}" ]] || qemu-img create -f qcow2 "${disk}" "${disk_size}"
 [[ -f "${ovmf_vars}" ]] || cp "${ovmf_vars_tpl}" "${ovmf_vars}"
 
@@ -92,7 +106,7 @@ fi
 
 echo "Processeur de la VM : ${cpu}"
 
-exec qemu-system-x86_64 -enable-kvm -machine q35 -cpu "${cpu}" -smp 4 -m 6G \
+qemu_args=(-enable-kvm -machine q35 -cpu "${cpu}" -smp 4 -m 6G \
     -drive if=pflash,format=raw,readonly=on,file="${ovmf_code}" \
     -drive if=pflash,format=raw,file="${ovmf_vars}" \
     -drive file="${disk}",if=none,format=qcow2,id=hd0 \
@@ -103,4 +117,23 @@ exec qemu-system-x86_64 -enable-kvm -machine q35 -cpu "${cpu}" -smp 4 -m 6G \
     -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
     -nic user,model=virtio-net-pci,hostfwd=tcp:127.0.0.1:2222-:22 \
     -device qemu-xhci -device usb-tablet \
-    -audiodev pipewire,id=snd0 -device intel-hda -device hda-duplex,audiodev=snd0
+    -audiodev pipewire,id=snd0 -device intel-hda -device hda-duplex,audiodev=snd0)
+
+if ${attach}; then
+    exec qemu-system-x86_64 "${qemu_args[@]}"
+fi
+
+# Détaché : nouvelle session (le terminal fermé n'envoie pas SIGHUP à QEMU),
+# sans entrée, sortie dans le journal
+setsid -f qemu-system-x86_64 "${qemu_args[@]}" </dev/null >"${log}" 2>&1
+
+# Erreur au démarrage (KVM, disque, option…) : QEMU s'arrête aussitôt
+sleep 2
+if pid=$(pgrep -f -- "file=${disk}," | head -1) && [[ -n ${pid} ]]; then
+    echo "VM lancée (QEMU, PID ${pid}) : le terminal peut être fermé."
+    echo "Messages de QEMU : ${log}"
+else
+    echo "QEMU s'est arrêté au démarrage :" >&2
+    tail -n 20 "${log}" >&2
+    exit 1
+fi

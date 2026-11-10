@@ -130,7 +130,13 @@ sudo pacman -S --needed qemu-desktop edk2-ovmf
 ./run.sh                   # live (ISO la plus récente de out/)
 ./run.sh -i                # système installé (--installe)
 ./run.sh --iso FICHIER     # live d'une ISO précise
+./run.sh -a                # QEMU attaché au terminal (--attache)
 ```
+
+QEMU est lancé détaché du terminal (`setsid`, sortie dans `vm-test/qemu.log`) :
+fermer le terminal n'arrête pas la VM. `-a` le garde attaché, comme avant. Une
+seconde VM sur le même disque est refusée, et une erreur de démarrage de QEMU
+est affichée (fin du journal).
 
 `run.sh` garde dans `vm-test/` le disque virtuel `disque.qcow2` (30 Go, créé
 s'il manque) et les variables UEFI `OVMF_VARS.fd`. Le live démarre toujours en
