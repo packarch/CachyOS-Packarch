@@ -706,7 +706,7 @@ Bluetooth, « lancer en root »), notifications mako, verrouillage hyprlock,
 aperçu des bureaux sov (AUR, copie dans `myrepo-pkgs/aur/sov`), **kitty seul**
 (ni alacritty ni foot), en français. Pas de Spotify/mpd (touches multimédia :
 playerctl), pas de pywal ni de mode clair : les **mêmes 10 thèmes et fonds
-d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+T
+d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+Maj+T
 ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme la barre du thème `packarch`
 d'Openbox, waybar a le menu des applications à gauche, les lanceurs au centre
 (Firefox, Thunar, kitty, et Discord, FileZilla, MKVToolNix, FileBot s'ils sont
