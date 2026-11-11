@@ -457,7 +457,8 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
 `pink-sylvanas`, `red-satanic`, `spark`, `yellow-flower`.
 
 - les `theme.toml` de `packarch-openbox-settings` sont copiés à la construction dans
-  `/usr/share/xfcethemes/themes/<thème>/` (une seule source) ; sur XFCE
+  `/etc/skel/.config/xfce4/themes/<thème>/` (`/usr/share/xfcethemes/themes`
+  avant packarch-xfce-settings 1.0.9-15) ; sur XFCE
   (`XDG_CURRENT_DESKTOP`, ou pas de thèmes Openbox), `packarch-skin apply
   THÈME` règle le fond d'écran du thème (tous les réglages de xfdesktop, et
   ceux par nom d'écran de xfdesktop 4.20,
@@ -468,6 +469,11 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
   xfce4-terminal (palette du thème) et de Geany, et place le thème en tête du
   lanceur du tableau de bord. Polices, barre et menus restent propres à
   Openbox (`bar`, `font`, `openbox-menu` refusés sur XFCE).
+- les thèmes appliqués sont ceux de l'utilisateur, dans
+  `~/.config/xfce4/themes` (packarch-skin 1.5.0, comme
+  `~/.config/openbox/themes` et `~/.config/sway/themes`) : ceux de
+  `/etc/skel` qui y manquent y sont copiés (tous la première fois), un thème déjà présent
+  n'est jamais remplacé (les modifications de l'utilisateur restent) ;
 - le thème courant est dans `~/.config/xfcethemes/.current_theme` ;
   `packarch-skin render` écrit le thème `default` dans le `/etc/skel` du
   paquet (xsettings, xfwm4, xfce4-desktop, terminalrc, GTK 2/3/4,
@@ -739,7 +745,8 @@ inactivité (seulement avant la mise en veille), pavé numérique activé.
   `OnlyShowIn` contient maintenant `sway`) ; `~/.config/autostart` cache
   picom (compositeur X) et le nm-applet sans `--indicator` sous Sway.
 - **Thèmes** : les `theme.toml` d'Openbox sont copiés à la construction dans
-  `/usr/share/packarch/sway/themes` (miniatures dans
+  `/etc/skel/.config/sway/themes` (`/usr/share/packarch/sway/themes` avant
+  packarch-sway-settings 1.0-20 ; miniatures dans
   `/usr/share/packarch/sway/icons`). `packarch-skin apply` écrit le fond
   d'écran (`sway-output`), les couleurs des fenêtres et les thèmes GTK,
   d'icônes (couleur des dossiers comprise) et de curseur (`sway-theme`,
@@ -747,7 +754,9 @@ inactivité (seulement avant la mise en veille), pavé numérique activé.
   rofi, mako, kitty, hyprlock et Geany, puis `swaymsg reload` ;
   `render` écrit le thème `default` dans `/etc/skel` à la construction, et
   `apply-live-config` le refait sur le système installé, comme avec Openbox.
-  Thème courant : `~/.config/sway/.current_theme`.
+  Thèmes de l'utilisateur : `~/.config/sway/themes` (packarch-skin 1.5.0 ;
+  ceux de `/etc/skel` qui y manquent y sont copiés, un thème déjà présent
+  n'est jamais remplacé). Thème courant : `~/.config/sway/.current_theme`.
 - `packarch-sway-settings` n'a aucun fichier en commun avec
   `packarch-openbox-settings` ni `packarch-xfce-settings` : il peut être
   installé à côté (terminal des applications `Terminal=true` :
