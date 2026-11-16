@@ -4,7 +4,8 @@ Ce dépôt est dérivé de [cachyos-live-iso](https://github.com/cachyos/cachyos
 L'ISO officielle démarre sur KDE Plasma ; celle-ci démarre sur **XFCE, en français**,
 avec un sélecteur de thèmes, et son installeur installe, **en ligne et à jour**,
 au choix **ce même bureau XFCE**, **le bureau Openbox de Packarch** ou
-**son bureau Sway** (Wayland, depuis le 2026-11-09).
+**son bureau labwc** (Wayland, depuis le 2026-11-16 ; il remplace le bureau
+Sway du 2026-11-09).
 
 **Nom : Packarch.** Depuis le 2026-10-30, l'ISO porte le nom de Packarch partout
 où ce n'est pas un nom de CachyOS dont dépend le système : menus de GRUB,
@@ -471,7 +472,7 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
   Openbox (`bar`, `font`, `openbox-menu` refusés sur XFCE).
 - les thèmes appliqués sont ceux de l'utilisateur, dans
   `~/.config/xfce4/themes` (packarch-skin 1.5.0, comme
-  `~/.config/openbox/themes` et `~/.config/sway/themes`) : ceux de
+  `~/.config/openbox/themes` et `~/.config/labwc/themes`) : ceux de
   `/etc/skel` qui y manquent y sont copiés (tous la première fois), un thème déjà présent
   n'est jamais remplacé (les modifications de l'utilisateur restent) ;
 - le thème courant est dans `~/.config/xfcethemes/.current_theme` ;
@@ -625,8 +626,8 @@ retire `/etc/xdg/calamares` du système installé.
 
 - **Page « Bureau »** (`packagechooser@desktop`, avant « Paquets ») réduite à
   trois choix : **XFCE** (par défaut, le bureau du live), **Openbox** (celui
-  de Packarch, voir [Bureau Openbox](#bureau-openbox-packarch)) ou **Sway**
-  (voir [Bureau Sway](#bureau-sway-packarch)). Le live, lui, démarre toujours
+  de Packarch, voir [Bureau Openbox](#bureau-openbox-packarch)) ou **labwc**
+  (voir [Bureau labwc](#bureau-labwc-packarch)). Le live, lui, démarre toujours
   sur XFCE.
 - **`shellprocess@initialize_pacman`** copie aussi
   `/etc/pacman.d/packarch-mirrorlist` sur le système installé, avec les
@@ -704,63 +705,75 @@ retire `/etc/xdg/calamares` du système installé.
 - `packages_online.conf` (options d'origine) fait un `pacman -Syu` après l'installation
   des paquets : **le système installé est à jour**.
 
-### Bureau Sway (Packarch)
+### Bureau labwc (Packarch)
 
-Le choix « Sway » (ajouté le 2026-11-09) installe `packarch-sway-settings`
-depuis [packarch] (sources : `myrepo-pkgs/packarch-sway-settings`) et les
-greffons de Thunar. La configuration reprend celle de Sway d'Aditya Shakya,
-dans sa version **GPL3** (`archcraft-sway-free`,
-[archcraft-sway](https://github.com/archcraft-os/archcraft-sway)) : celle
-d'Archcraft Prime (`archcraft-sway`, licence DBAD) interdit la redistribution
-et n'a servi que de modèle (elle n'en diffère que par les couleurs, wofi et
-wlogout). Barre waybar, menus rofi (lanceur, alimentation, captures, réseau,
+Le choix « labwc » (ajouté le 2026-11-16, à la place du choix « Sway » du
+2026-11-09, retiré avec `packarch-sway-settings` et `sov`) installe
+`packarch-labwc-settings` depuis [packarch] (sources :
+`myrepo-pkgs/packarch-labwc-settings`) et les greffons de Thunar.
+`packarch-labwc-settings` remplace `packarch-sway-settings` (`replaces`) : un
+système qui avait le bureau Sway passe au bureau labwc à sa mise à jour.
+
+[labwc](https://labwc.github.io) est un compositeur Wayland à fenêtres
+flottantes qui reprend Openbox : il lit les **mêmes thèmes de fenêtres**
+(`OB-Packarch-*`, dossier `openbox-3` de `packarch-themes`), son `rc.xml` et
+son `menu.xml` ont le format d'Openbox. Les raccourcis sont ceux du bureau
+Openbox de Packarch (fenêtres, bureaux, moitiés d'écran, pavé numérique,
+menus), avec les applications et menus rofi du bureau Sway (Super+Entrée
+kitty, Super+t Thunar, Super+f Firefox, Super+d applications, Super+x
+alimentation, Super+s captures…) ; Super+Espace et le clic droit sur le
+bureau ouvrent le menu de labwc (applications par `labwc-menu-generator`,
+styles par `packarch-skin openbox-menu`, préférences, système).
+
+Les outils Wayland sont ceux de l'ancien bureau Sway, d'après la
+configuration **GPL3** d'Aditya Shakya (`archcraft-sway-free`,
+[archcraft-sway](https://github.com/archcraft-os/archcraft-sway)) : barre
+waybar (menu des applications à gauche, bureaux `ext/workspaces`, liste des
+fenêtres `wlr/taskbar` comme polywins sous Openbox, lanceurs au centre,
+extinction à droite), menus rofi (lanceur, alimentation, captures, réseau,
 Bluetooth, « lancer en root »), notifications mako, verrouillage hyprlock,
-aperçu des bureaux sov (AUR, copie dans `myrepo-pkgs/aur/sov`), **kitty seul**
-(ni alacritty ni foot), en français. Pas de Spotify/mpd (touches multimédia :
-playerctl), pas de pywal ni de mode clair : les **mêmes 10 thèmes et fonds
-d'écran** qu'Openbox et XFCE, appliqués par `packarch-skin` 1.3.0 (Super+Maj+T
-ou bouton des thèmes de waybar : `packarch-skin chooser`). Comme la barre du thème `packarch`
-d'Openbox, waybar a le menu des applications à gauche, les lanceurs au centre
-(Firefox, Thunar, kitty, et Discord, FileZilla, MKVToolNix, FileBot s'ils sont
-installés) et le bouton d'extinction à droite (1.0-3). Depuis la 1.0-11, le
-bureau tourne sur **SwayFX** (dépôt `cachyos`, fournit `sway`) : coins
-arrondis et ombres des fenêtres, repris des réglages picom du thème
-(`corner_radius`, `shadow_radius`, `shadow_opacity`) par `packarch-skin`
-1.3.2, comme sous Openbox (0 pour adaptive, hacking, pink-city et
-yellow-flower, 6 px pour les autres). `packarch-skin` 1.3.1
-n'ouvre qu'un sélecteur de thèmes à la fois, sur tous les bureaux (menu
-« Thèmes Packarch » de XFCE compris). Comme sur les
-autres bureaux : pas de verrouillage ni d'extinction de l'écran par
-inactivité (seulement avant la mise en veille), pavé numérique activé.
+fond d'écran swaybg, swayidle (verrouillage avant la mise en veille seulement),
+captures grim et slurp, pipette hyprpicker, nwg-look (apparence GTK),
+wdisplays (écrans), **kitty seul**, en français. Les menus rofi se ferment par
+un clic sur une fenêtre ou le bureau (`pkill rofi` dans les actions de la
+souris de `rc.xml` : rofi ne voit pas ces clics sous Wayland) ou en les
+relançant. La capture « fenêtre » devient la capture d'un écran choisi d'un
+clic (labwc ne donne pas la position de la fenêtre active).
 
 - **Session** : un hook pacman remplace l'`Exec` de
-  `/usr/share/wayland-sessions/sway.desktop` par `packarch-run-sway`
-  (variables de Wayland d'Archcraft, `--unsupported-gpu` avec le pilote
-  NVIDIA, disposition du clavier du système lue par `localectl` :
-  `XKB_DEFAULT_LAYOUT`…, `KITTY_CONFIG_DIRECTORY` sur la configuration kitty
-  de Sway) ; `60-packarch-sway.conf` fait de Sway la session par défaut de
+  `/usr/share/wayland-sessions/labwc.desktop` par `packarch-run-labwc`
+  (variables de Wayland, disposition du clavier du système lue par
+  `localectl` : `XKB_DEFAULT_LAYOUT`…, `KITTY_CONFIG_DIRECTORY` sur la
+  configuration kitty de labwc, greffons de Thunar sans celui du fond
+  d'écran) ; `60-packarch-labwc.conf` fait de labwc la session par défaut de
   LightDM.
-- **Autostart** : `dex` lance les entrées de `/etc/xdg/autostart`
-  (cachy-update, xfce-polkit, configuration de GitHub, dont
-  `OnlyShowIn` contient maintenant `sway`) ; `~/.config/autostart` cache
-  picom (compositeur X) et le nm-applet sans `--indicator` sous Sway.
+- **Autostart** (`~/.config/labwc/autostart`) : gsettings du thème courant,
+  kanshi s'il est configuré, `scripts/startup` (swaybg, waybar, mako, actions
+  de Thunar, nm-applet `--indicator`), `dex` pour les entrées de
+  `/etc/xdg/autostart` (cachy-update, xfce-polkit, configuration de GitHub,
+  dont `OnlyShowIn` contient `labwc`) ; `~/.config/autostart` cache picom
+  (compositeur X) et le nm-applet sans `--indicator` sous labwc.
 - **Thèmes** : les `theme.toml` d'Openbox sont copiés à la construction dans
-  `/etc/skel/.config/sway/themes` (`/usr/share/packarch/sway/themes` avant
-  packarch-sway-settings 1.0-20 ; miniatures dans
-  `/usr/share/packarch/sway/icons`). `packarch-skin apply` écrit le fond
-  d'écran (`sway-output`), les couleurs des fenêtres et les thèmes GTK,
-  d'icônes (couleur des dossiers comprise) et de curseur (`sway-theme`,
-  remis par gsettings à chaque démarrage de Sway), les couleurs de waybar,
-  rofi, mako, kitty, hyprlock et Geany, puis `swaymsg reload` ;
-  `render` écrit le thème `default` dans `/etc/skel` à la construction, et
-  `apply-live-config` le refait sur le système installé, comme avec Openbox.
-  Thèmes de l'utilisateur : `~/.config/sway/themes` (packarch-skin 1.5.0 ;
-  ceux de `/etc/skel` qui y manquent y sont copiés, un thème déjà présent
-  n'est jamais remplacé). Thème courant : `~/.config/sway/.current_theme`.
-- `packarch-sway-settings` n'a aucun fichier en commun avec
+  `/etc/skel/.config/labwc/themes` (miniatures dans
+  `/usr/share/packarch/labwc/icons`). `packarch-skin` 1.6.0 `apply` écrit
+  dans `rc.xml` le thème des fenêtres, les boutons de la barre de titre
+  (`titleLayout` d'Openbox converti), les polices, les coins arrondis et les
+  ombres (réglages picom du thème, tailles et couleurs des ombres dans
+  `themerc-override`), le fond d'écran (`wallpaper`), le curseur
+  (`environment`), les thèmes GTK, d'icônes (couleur des dossiers comprise)
+  et de curseur (`packarch-theme`, remis par gsettings à chaque démarrage),
+  les couleurs de waybar, rofi, mako, kitty, hyprlock et Geany, puis
+  `labwc --reconfigure` et `scripts/startup`. `render` écrit le thème
+  `default` dans `/etc/skel` à la construction, et `apply-live-config` le
+  refait sur le système installé, comme avec Openbox. Thèmes de
+  l'utilisateur : `~/.config/labwc/themes`. Thème courant :
+  `~/.config/labwc/.current_theme`.
+- `packarch-labwc-settings` n'a aucun fichier en commun avec
   `packarch-openbox-settings` ni `packarch-xfce-settings` : il peut être
   installé à côté (terminal des applications `Terminal=true` :
-  `/etc/xdg/sway-xdg-terminals.list`).
+  `/etc/xdg/labwc-xdg-terminals.list`).
+- Pas de capture d'écran sur la page « Bureau » pour labwc (CachyOS n'en
+  fournit pas).
 
 ### Bureau Openbox (Packarch)
 
@@ -1268,7 +1281,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
   paquets `-git` (`lead-git`, `skippy-xd-git`, `networkmanager-dmenu-git`)
   prennent la version du jour de leur compilation. Les captures d'écran de la
   page « Bureau » sont celles de CachyOS (`/etc/calamares/images/xfce.jxl`,
-  `openbox.jxl`, `sway.jxl`).
+  `openbox.jxl`) ; labwc n'en a pas.
 - **Mise à jour de Calamares** : notre version ne suit pas automatiquement
   celle de CachyOS (voir [Mettre à jour Calamares](#mettre-à-jour-calamares)).
 

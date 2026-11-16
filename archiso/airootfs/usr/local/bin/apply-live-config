@@ -4,7 +4,7 @@
 # not chrooted) during the online installation, once the packages are
 # installed in ROOT and USER is created. The settings of the desktop come from
 # its package (packarch-xfce-settings, packarch-openbox-settings or
-# packarch-sway-settings, which also make Openbox or Sway the default LightDM
+# packarch-labwc-settings, which also make Openbox or labwc the default LightDM
 # session), the ones common to the desktops
 # (LightDM greeter and numeric keypad, no screen blanking, Geany and menu
 # hooks) from packarch-system-settings. This script copies what is specific to
@@ -23,7 +23,7 @@ user="${2:-}"
 
 # Only what does not depend on the desktop: the live /etc/skel also holds
 # the XFCE settings of packarch-xfce-settings (already installed on the target
-# with XFCE; with Openbox, xfsettingsd also runs and would apply them; Sway
+# with XFCE; with Openbox, xfsettingsd also runs and would apply them; labwc
 # does not read them) and the
 # live-only "Ajuster la résolution" panel launcher
 for f in .bash_profile .bashrc .config/geany/geany.conf; do
@@ -32,8 +32,8 @@ for f in .bash_profile .bashrc .config/geany/geany.conf; do
     cp -a "/etc/skel/$f" "$root/etc/skel/$f"
 done
 
-# With Openbox (or Sway), the default theme was rendered into /etc/skel when
-# packarch-openbox-settings (packarch-sway-settings) was built, without the
+# With Openbox (or labwc), the default theme was rendered into /etc/skel when
+# packarch-openbox-settings (packarch-labwc-settings) was built, without the
 # geany.conf copied above (XFCE colors). Rendered again so that the first
 # session already has the default theme everywhere (/etc/skel is copied to the
 # home at the end by Calamares)
