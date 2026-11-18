@@ -57,8 +57,8 @@ En **utilisateur normal** (le mot de passe `sudo` n'est demandé que pour
 l'étape de l'ISO) :
 
 ```bash
-git clone https://github.com/packarch/CachyOS-Packarch.git
-cd CachyOS-Packarch
+git clone https://github.com/packarch/Packarch.git
+cd Packarch
 ./build.sh
 ```
 

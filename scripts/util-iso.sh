@@ -58,7 +58,7 @@ trap_exit() {
 generate_motd() {
     cat << 'EOF' > ${src_dir}/archiso/airootfs/etc/motd
 This ISO is based on ArchLinux ISO modified to provide Installation Environment for [38;2;23;147;209mPackarch[0m, based on CachyOS.
-https://github.com/packarch/CachyOS-Packarch
+https://github.com/packarch/Packarch
 
 CachyOS Archiso Sources:
 https://github.com/cachyos/cachyos-live-iso
@@ -71,7 +71,7 @@ https://github.com/calamares/calamares
 
 Live environment will start now and let you install [38;2;23;147;209mPackarch[0m to disk.
 
-Report a problem: https://github.com/packarch/CachyOS-Packarch/issues
+Report a problem: https://github.com/packarch/Packarch/issues
 
 Welcome to your [38;2;23;147;209mPackarch[0m!
 

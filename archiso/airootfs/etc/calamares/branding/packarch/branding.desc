@@ -27,9 +27,9 @@ strings:
     shortVersionedName:  Packarch
     # GRUB_DISTRIBUTOR of the installed system (grubcfg module)
     bootloaderEntryName: Packarch
-    productUrl:          https://github.com/packarch/CachyOS-Packarch
+    productUrl:          https://github.com/packarch/Packarch
     # "Support" button of the welcome page
-    supportUrl:          https://github.com/packarch/CachyOS-Packarch/issues
+    supportUrl:          https://github.com/packarch/Packarch/issues
 
 images:
     productLogo:         "logo.png"

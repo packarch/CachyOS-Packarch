@@ -24,7 +24,7 @@ repo_name="packarch-live-local"
 makepkg_conf="$(readlink -f ../scripts/makepkg-generic.conf)"
 chroot_sh="${PACKARCH_PKGS:-../../myrepo-pkgs}/chroot.sh"
 if [[ ! -f $chroot_sh ]]; then
-    echo "$chroot_sh introuvable : cloner packarch/myrepo-pkgs à côté de CachyOS-Packarch, ou définir PACKARCH_PKGS" >&2
+    echo "$chroot_sh introuvable : cloner packarch/myrepo-pkgs à côté de Packarch, ou définir PACKARCH_PKGS" >&2
     exit 1
 fi
 # shellcheck source=../../myrepo-pkgs/chroot.sh
