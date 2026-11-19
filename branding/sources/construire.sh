@@ -65,10 +65,15 @@ jpeg "$tmp/bureau.png" ../fonds/packarch-default.jpg
 mkdir -p ../sddm/packarch
 # Salle de 12 x 8 cases (rangées 7 à 14) qui contient « Packarch Linux » et
 # le panneau de connexion de Main.qml (hauteurPanneau de theme.conf)
-python3 -I labyrinthe.py --salle --salle-l=12 --salle-h=8 --salle-y=7 > "$tmp/labyrinthe.svg"
+# Quelques fantômes dans les couloirs, en pleines couleurs (murs à 70 %)
+sddm_laby=(--salle --salle-l=12 --salle-h=8 --salle-y=7 --fantomes=6)
+python3 -I labyrinthe.py "${sddm_laby[@]}" > "$tmp/labyrinthe.svg"
+python3 -I labyrinthe.py "${sddm_laby[@]}" --fantomes-seuls > "$tmp/fantomes-laby.svg"
 rsvg-convert "$tmp/labyrinthe.svg" -o "$tmp/labyrinthe.png"
+rsvg-convert "$tmp/fantomes-laby.svg" -o "$tmp/fantomes-laby.png"
 magick "$tmp/labyrinthe.png" -channel A -evaluate multiply 0.7 +channel "$tmp/labyrinthe-a.png"
-magick -size ${L}x${H} xc:"$fond" "$tmp/labyrinthe-a.png" -compose over -composite "$tmp/laby.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/labyrinthe-a.png" -compose over -composite \
+	"$tmp/fantomes-laby.png" -compose over -composite "$tmp/laby.png"
 
 # Ligne du bas : pacman et pastilles, puis fantômes de 8 couleurs sur toute
 # la largeur, centrée
@@ -103,10 +108,13 @@ jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
 # --- Variante du bureau : labyrinthe entier (sans fondu), texte au centre,
 # sans la ligne de fantômes ---------------------------------------------------
 # Le texte est dans une salle du labyrinthe (labyrinthe.py --salle)
-python3 -I labyrinthe.py --salle > "$tmp/labyrinthe-salle.svg"
+python3 -I labyrinthe.py --salle --fantomes=6 > "$tmp/labyrinthe-salle.svg"
+python3 -I labyrinthe.py --salle --fantomes=6 --fantomes-seuls > "$tmp/fantomes-salle.svg"
 rsvg-convert "$tmp/labyrinthe-salle.svg" -o "$tmp/labyrinthe-salle.png"
+rsvg-convert "$tmp/fantomes-salle.svg" -o "$tmp/fantomes-salle.png"
 magick "$tmp/labyrinthe-salle.png" -channel A -evaluate multiply 0.7 +channel "$tmp/laby-plein-a.png"
-magick -size ${L}x${H} xc:"$fond" "$tmp/laby-plein-a.png" -compose over -composite "$tmp/laby-plein.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/laby-plein-a.png" -compose over -composite \
+	"$tmp/fantomes-salle.png" -compose over -composite "$tmp/laby-plein.png"
 grain "$tmp/laby-plein.png" "$tmp/laby-plein-g.png"
 magick "$tmp/laby-plein-g.png" "$tmp/texte52.png" -gravity center -compose over -composite "$tmp/laby-plein-t.png"
 jpeg "$tmp/laby-plein-t.png" ../fonds/packarch-labyrinthe.jpg
