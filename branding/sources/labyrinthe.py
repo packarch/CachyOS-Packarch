@@ -5,15 +5,22 @@ import random, sys
 # --salle : salle au centre (10 x 3 cases, comme la maison des fantômes du
 # jeu) pour le texte « Packarch Linux » : sans murs ni pastilles dedans,
 # cadre à double trait aux coins arrondis, ouverte à gauche et à droite.
-# Sans l'option, le labyrinthe est le même qu'avant (fond SDDM).
-salle = "--salle" in sys.argv[1:]
+# --salle-y=N : rangée du haut de la salle (10 par défaut : centrée).
+# --cadre-seul : seulement le cadre de la salle (dessiné sans fondu sur le
+# fond SDDM) ; --sans-cadre : le labyrinthe sans le cadre.
+# Sans --salle, le labyrinthe est le même qu'avant.
+args = sys.argv[1:]
+salle = "--salle" in args
+cadre_seul = "--cadre-seul" in args
+sans_cadre = "--sans-cadre" in args
+haut = next((int(a.split("=")[1]) for a in args if a.startswith("--salle-y=")), 10)
 random.seed(7)
 C=96; W,H=3840,2160
 nx,ny=W//C,H//C+1
 ox=(W-nx*C)//2; oy=(H-ny*C)//2
 # Salle : cases [sx0, sx1) x [sy0, sy1), centrée sur l'image
-sx0,sx1,sy0,sy1=15,25,10,13
-porte=11
+sx0,sx1,sy0,sy1=15,25,haut,haut+3
+porte=haut+1
 def dans(x,y): return salle and sx0<=x<sx1 and sy0<=y<sy1
 # murs : droite[x][y], bas[x][y]
 droite=[[True]*ny for _ in range(nx)]; bas=[[True]*ny for _ in range(nx)]
@@ -61,6 +68,11 @@ if salle:
     # Les deux traits se rejoignent aux portes, comme dans le jeu
     jonctions=f"M{x0} {p0}H{x0+i}M{x0} {p1}H{x0+i}M{x1} {p0}H{x1-i}M{x1} {p1}H{x1-i}"
     cadre=f'\n<path d="{rect(0,40)} {rect(i,18)} {jonctions}" stroke="#2f3f85" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+if cadre_seul:
+    print(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}">{cadre}
+</svg>''')
+    sys.exit()
+if sans_cadre: cadre=""
 print(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}">
 <path d="{d}" stroke="#26336b" stroke-width="10" stroke-linecap="round" fill="none"/>
 <path d="{pts}" fill="#2a2a33"/>{cadre}

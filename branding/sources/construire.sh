@@ -62,13 +62,20 @@ jpeg "$tmp/bureau.png" ../fonds/packarch-default.jpg
 
 # --- Fond SDDM : labyrinthe estompé vers le centre --------------------------
 mkdir -p ../sddm/packarch
-python3 -I labyrinthe.py > "$tmp/labyrinthe.svg"
+# Le texte est dans une salle du labyrinthe (rangées 8 à 10, au-dessus du
+# panneau de connexion) ; le labyrinthe s'estompe vers le centre, mais pas
+# le cadre de la salle, dessiné à part à 70 %
+python3 -I labyrinthe.py --salle --salle-y=8 --sans-cadre > "$tmp/labyrinthe.svg"
+python3 -I labyrinthe.py --salle --salle-y=8 --cadre-seul > "$tmp/cadre.svg"
 rsvg-convert "$tmp/labyrinthe.svg" -o "$tmp/labyrinthe.png"
+rsvg-convert "$tmp/cadre.svg" -o "$tmp/cadre.png"
 # Invisible au centre, 70 % vers les bords (ovale)
 magick -size ${L}x${H} radial-gradient:black-white -level 30%,85% -evaluate multiply 0.7 "$tmp/masque.png"
 magick "$tmp/labyrinthe.png" \( +clone -alpha extract "$tmp/masque.png" -compose multiply -composite \) \
 	-alpha off -compose copy-opacity -composite "$tmp/laby-fondu.png"
-magick -size ${L}x${H} xc:"$fond" "$tmp/laby-fondu.png" -compose over -composite "$tmp/laby.png"
+magick "$tmp/cadre.png" -channel A -evaluate multiply 0.7 +channel "$tmp/cadre-a.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/laby-fondu.png" -compose over -composite \
+	"$tmp/cadre-a.png" -compose over -composite "$tmp/laby.png"
 
 # Ligne du bas : pacman et pastilles, puis fantômes de 8 couleurs sur toute
 # la largeur, centrée
@@ -91,9 +98,11 @@ done
 magick "$tmp/laby.png" "$tmp/pacman.png" -geometry +${marge}+$((y - 3)) -composite "${args[@]}" "$tmp/laby-ligne.png"
 
 magick "$tmp/texte.png" -filter Lanczos -resize 52% "$tmp/texte52.png"
+th=$(magick identify -format %h "$tmp/texte52.png")
 for v in laby-ligne laby; do
 	grain "$tmp/$v.png" "$tmp/$v-g.png"
-	magick "$tmp/$v-g.png" "$tmp/texte52.png" -gravity north -geometry +0+828 -compose over -composite "$tmp/$v-t.png"
+	# Centre de la salle : 888 px
+	magick "$tmp/$v-g.png" "$tmp/texte52.png" -gravity north -geometry +0+$((888 - th / 2)) -compose over -composite "$tmp/$v-t.png"
 done
 jpeg "$tmp/laby-ligne-t.png" ../sddm/packarch/background.jpg
 jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
