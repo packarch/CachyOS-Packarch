@@ -8,19 +8,33 @@ The configuration (settings_*.conf and module configurations) is not in
 this patch: the ISO ships it in /etc/xdg/calamares, read first with
 calamares -X.
 ---
- src/modules/bootloader/main.py          | 18 +++++++++++++-----
+ src/modules/bootloader/main.py          | 24 +++++++++++++++++-------
  src/modules/chwd/main.py                |  2 +-
  src/modules/grubcfg/main.py             |  3 +++
  src/modules/netinstall/PackageModel.cpp |  6 ++++++
  src/modules/pacstrap/main.py            |  5 ++---
+ src/scripts/btrfs-installation-snapshot |  2 +-
  src/scripts/shell-setup                 |  3 ++-
- 6 files changed, 27 insertions(+), 10 deletions(-)
+ 7 files changed, 32 insertions(+), 13 deletions(-)
 
 diff --git a/src/modules/bootloader/main.py b/src/modules/bootloader/main.py
-index 4e9095d..a1271f3 100644
+index 4e9095d64..80ab90c2d 100644
 --- a/src/modules/bootloader/main.py
 +++ b/src/modules/bootloader/main.py
-@@ -824,9 +824,14 @@ def update_limine_config(efi_directory, installation_root_path, fw_type):
+@@ -809,8 +809,10 @@ def update_limine_config(efi_directory, installation_root_path, fw_type):
+ 
+                 # TODO (ventureo): This should be properly packaged when
+                 # limine starts supporting drop-in configuration files.
+-                config_file.write("# CachyOS Limine theme\n")
+-                config_file.write("# Author: diegons490 (https://github.com/diegons490/cachyos-limine-theme)\n")
++                # Packarch: its own wallpaper (limineSplashLogo), the colors
++                # of the CachyOS theme
++                config_file.write("# Packarch Limine theme (wallpaper of Packarch)\n")
++                config_file.write("# Colors: CachyOS Limine theme by diegons490 (https://github.com/diegons490/cachyos-limine-theme)\n")
+                 config_file.write("term_palette: 1e1e2e;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4\n")
+                 config_file.write("term_palette_bright: 585b70;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4\n")
+                 config_file.write("term_background: ffffffff\n")
+@@ -824,9 +826,14 @@ def update_limine_config(efi_directory, installation_root_path, fw_type):
          except KeyError:
              libcalamares.utils.warning('limineSplashLogo not set. Skipping wallpaper in limine.conf')
  
@@ -37,7 +51,7 @@ index 4e9095d..a1271f3 100644
  
      with open(limine_entry_config_path, 'w') as limine_entry_config:
          limine_entry_config.write(f'ESP_PATH="{efi_directory}"\n')
-@@ -1095,9 +1100,12 @@ def prepare_bootloader(fw_type, install_hybrid_grub):
+@@ -1095,9 +1102,12 @@ def prepare_bootloader(fw_type, install_hybrid_grub):
          if libcalamares.globalstorage.contains(gs_name):
              efi_boot_loader = libcalamares.globalstorage.value(gs_name)
          else:
@@ -54,7 +68,7 @@ index 4e9095d..a1271f3 100644
          # If the conf value for using global storage is not set, use the setting from the config file.
          try:
 diff --git a/src/modules/chwd/main.py b/src/modules/chwd/main.py
-index c2d586f..b472405 100755
+index c2d586fe0..b4724059b 100755
 --- a/src/modules/chwd/main.py
 +++ b/src/modules/chwd/main.py
 @@ -31,7 +31,7 @@ class HostError(Exception):
@@ -67,7 +81,7 @@ index c2d586f..b472405 100755
  
  def line_cb(line):
 diff --git a/src/modules/grubcfg/main.py b/src/modules/grubcfg/main.py
-index c16a650..9837631 100644
+index c16a650df..9837631a1 100644
 --- a/src/modules/grubcfg/main.py
 +++ b/src/modules/grubcfg/main.py
 @@ -309,6 +309,9 @@ def run():
@@ -81,7 +95,7 @@ index c16a650..9837631 100644
      if bootloader != "grub":
          libcalamares.utils.warning("User selected bootloader is not GRUB, skipping")
 diff --git a/src/modules/netinstall/PackageModel.cpp b/src/modules/netinstall/PackageModel.cpp
-index bd666f3..9ae69fb 100644
+index bd666f3b7..9ae69fbb4 100644
 --- a/src/modules/netinstall/PackageModel.cpp
 +++ b/src/modules/netinstall/PackageModel.cpp
 @@ -320,6 +320,12 @@ PackageModel::updateSelections( const QStringList& selectNames, const QStringLis
@@ -98,7 +112,7 @@ index bd666f3..9ae69fb 100644
  
  PackageTreeItem::List
 diff --git a/src/modules/pacstrap/main.py b/src/modules/pacstrap/main.py
-index e97005c..f78cbfb 100755
+index e97005c18..f78cbfb16 100755
 --- a/src/modules/pacstrap/main.py
 +++ b/src/modules/pacstrap/main.py
 @@ -94,8 +94,7 @@ def run():
@@ -120,8 +134,21 @@ index e97005c..f78cbfb 100755
      elif is_root_on_btrfs:
          libcalamares.utils.debug("Root on BTRFS")
          if bootloader == "limine":
+diff --git a/src/scripts/btrfs-installation-snapshot b/src/scripts/btrfs-installation-snapshot
+index 8c4924115..5e1315c79 100755
+--- a/src/scripts/btrfs-installation-snapshot
++++ b/src/scripts/btrfs-installation-snapshot
+@@ -10,7 +10,7 @@ fi
+ # --print-number outputs the snapshot ID so we can save it for later use
+ # by restore tooling (e.g. snapper rollback).
+ SNAP_ID=$(snapper --no-dbus -c root create --print-number \
+-    --description "Fresh CachyOS Installation" \
++    --description "Installation de Packarch" \
+     --userdata "important=yes")
+ 
+ mkdir -p /etc/cachyos
 diff --git a/src/scripts/shell-setup b/src/scripts/shell-setup
-index 3708d7c..e051a7f 100755
+index 3708d7c85..e051a7f70 100755
 --- a/src/scripts/shell-setup
 +++ b/src/scripts/shell-setup
 @@ -1,6 +1,7 @@

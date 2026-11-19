@@ -4,7 +4,8 @@
 #
 # Packarch: rebuild of cachyos-calamares-next (CachyOS-PKGBUILDS) for
 # the XFCE live ISO. Built against the current boost of the repositories, with
-# live-offline.patch: the code changes only (hidden netinstall groups selected
+# live-offline.patch: the code changes only (Limine theme and installation
+# snapshot named after Packarch, hidden netinstall groups selected
 # by name, no LTS kernel, offline bootloader, zsh first). The configuration
 # (online installation of XFCE or Openbox, offline mode kept as an option) is
 # in archiso/airootfs/etc/xdg/calamares, read first because the ISO starts
@@ -13,7 +14,7 @@
 
 pkgname=cachyos-calamares-next
 pkgver=3.4.2
-pkgrel=13.26
+pkgrel=13.27
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
 license=(GPL-3.0-or-later)

@@ -58,6 +58,24 @@ thème) avec le `machine-id` dessous, et le hook de `packarch-system-settings`
 (1.0-7) renomme `/+CachyOS` en `/+Packarch` sur les systèmes déjà installés
 (réenrôlement de `limine.conf` si `ENABLE_ENROLL_LIMINE_CONFIG=yes`).
 
+**Thème de Limine et instantané d'installation.** Le fond de Limine écrit
+par Calamares (`limineSplashLogo` de `bootloader.conf`) est
+`/usr/share/packarch/limine-splash.png` de `packarch-system-settings` (fond
+`#1a1a1f`, pacman jaune en bas à droite, hors du menu) au lieu de celui de
+`cachyos-wallpapers`, et le commentaire du thème nomme Packarch (les couleurs
+restent celles du thème CachyOS de diegons490). Le premier instantané btrfs
+(`btrfs-installation-snapshot`) s'appelle « Installation de Packarch » au lieu
+de « Fresh CachyOS Installation », que Limine affichait sous l'entrée des
+instantanés. Sur les systèmes déjà installés, le hook de
+`packarch-system-settings` (1.0-19, 1.0-20) remplace le fond sur l'ESP et
+renomme l'instantané dans snapper et dans `limine.conf`.
+
+**Écrans de démarrage de l'ISO.** `grub/splash.png` (1920×1080, fond de
+l'UEFI, chargé par `background_image` dans `grub.cfg`) et `syslinux/splash.png`
+(640×480, BIOS) : fond `#1a1a1f` et pacman jaune, en bas à droite pour GRUB,
+en haut au-dessus du menu pour syslinux. Ils remplacent les images de
+CachyOS (`grub/splash.png` n'était pas chargé).
+
 ## Sommaire
 
 1. [Reconstruire l'ISO](#1-reconstruire-liso)
@@ -1173,6 +1191,8 @@ paquets. Il a été corrigé et reste disponible :
   désinstallé à la toute fin (installation hors ligne).
 - `bootloader/main.py` : entrée Limine nommée d'après le thème (`/+Packarch`),
   avec son `machine-id` dessous (voir [Nom : Packarch](#modifications-par-rapport-à-liso-officielle-cachyos)).
+- `bootloader/main.py` : commentaire du thème de Limine au nom de Packarch ;
+  `btrfs-installation-snapshot` : instantané « Installation de Packarch ».
 - `chwd/main.py` : « Installing needed drivers... » au lieu de « … for
   CachyOS... » (message sans traduction française).
 
