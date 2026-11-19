@@ -32,13 +32,13 @@ for f in .bash_profile .bashrc .config/geany/geany.conf; do
     cp -a "/etc/skel/$f" "$root/etc/skel/$f"
 done
 
-# With Openbox (or Packarch), the default theme was rendered into /etc/skel
+# With Openbox (or Packarch), the default theme (packarch) was rendered into /etc/skel
 # when packarch-openbox-settings (packarch-desktop-settings) was built, without the
 # geany.conf copied above (XFCE colors). Rendered again so that the first
 # session already has the default theme everywhere (/etc/skel is copied to the
 # home at the end by Calamares)
 if [[ -x "$root/usr/bin/packarch-skin" ]]; then
-    chroot "$root" packarch-skin render / default ||
+    chroot "$root" packarch-skin render / packarch ||
         echo "packarch-skin render failed" >&2
 fi
 

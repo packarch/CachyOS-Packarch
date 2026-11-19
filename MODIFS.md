@@ -391,12 +391,13 @@ de l'ISO à la fin.
   `/usr/local/bin/live-fit-display` (`xrandr --output <écran> --auto`) : dans
   une machine virtuelle, applique la taille de la fenêtre, que XFCE n'applique
   pas tout seul. Absent du système installé, où le script n'existe pas.
-- **Thème « default » dès le démarrage** (thème `default` de `packarch-skin`
-  depuis 1.0.9-7, écrit par `packarch-skin render` à la construction, voir
-  section 5) : `xsettings.xml` (thème GTK `Packarch-Default`, icônes
-  `Packarch` (dossiers bleus), curseur `Pear-Dark` au lieu de
-  `capitaine-cursors`), `xfwm4.xml` (bordures `Packarch-Default`),
-  `xfce4-desktop.xml` (fond `wallpaper-alt.png`), couleurs du terminal ajoutées à
+- **Thème « packarch » dès le démarrage** (thème par défaut de
+  `packarch-skin` depuis 1.10.0, `default` avant, renommé `classic` ; écrit par
+  `packarch-skin render` à la construction, voir section 5) : `xsettings.xml`
+  (thème GTK `Packarch-Packarch`, icônes `Packarch`, curseur `Vimix-Dark` au
+  lieu de `capitaine-cursors`), `xfwm4.xml` (bordures `Packarch-Packarch`),
+  `xfce4-desktop.xml` (fond `packarch-default.jpg` : gris `#1a1a1f` et pacman à
+  peine plus sombre, le fond du compositeur packarch nu), couleurs du terminal ajoutées à
   `terminalrc` (xfce4-terminal les importe dans xfconf au premier lancement).
   Mêmes valeurs dans `.gtkrc-2.0`, `gtk-3.0/settings.ini`,
   `gtk-4.0/settings.ini`, `.icons/default/index.theme` (curseur) et la
@@ -420,8 +421,9 @@ de l'ISO à la fin.
   son propre thème GTK `Packarch-Greeter` (le GTK 3 de `Greybird-dark`, dans
   ce paquet depuis 1.0-4), les icônes `Packarch` (dossiers bleus,
   `packarch-icons` ; `Luna-Red-Dark` avant 1.0-12), le curseur `Qogir-Dark` (`qogir-icon-theme`) et le fond
-  `/usr/share/backgrounds/wallpaper-alt.png` (`packarch-backgrounds` ;
-  `packarch-system-settings` 1.0-3). Le
+  `/usr/share/backgrounds/packarch-default.jpg` (le fond du thème packarch,
+  `packarch-backgrounds` 2.0-7 ; `packarch-system-settings` 1.0-22,
+  `wallpaper-alt.png` depuis 1.0-3). Le
   greeter lit ce dossier avant `/etc/lightdm/lightdm-gtk-greeter.conf`, dont
   tous les réglages sont commentés : plus de `sed` sur ce fichier.
 - **cachy-update toujours installé** (XFCE et Openbox) : dépendance de
@@ -442,7 +444,7 @@ de l'ISO à la fin.
   ni d'ouverture automatiques des disques.
 - `.config/xfce4/panel/launcher-30/theme-*.desktop` : les 7 entrées du bouton de
   thèmes.
-- `.config/xfcethemes/` : `.current_theme` (`default`) et des liens vers le
+- `.config/xfcethemes/` : `.current_theme` (`packarch`) et des liens vers le
   script et les icônes de `/usr/share/xfcethemes`.
 - `.xprofile` : lance `init-backdrop.sh` (voir ci-dessous).
 
@@ -478,7 +480,8 @@ qui dépanne doit isoler `tag:depannage` (README du dépôt).
 
 Depuis `packarch-xfce-settings` 1.0.9-7, le bureau XFCE utilise **les mêmes
 thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
-`default`, `adaptive`, `cyberpunk`, `hacking`, `packarch`, `pink-city`,
+`packarch` (thème par défaut), `classic` (nommé `default` avant
+`packarch-skin` 1.10.0), `adaptive`, `cyberpunk`, `hacking`, `pink-city`,
 `pink-sylvanas`, `red-satanic`, `spark`, `yellow-flower`.
 
 - les `theme.toml` de `packarch-openbox-settings` sont copiés à la construction dans
@@ -500,7 +503,7 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
   `/etc/skel` qui y manquent y sont copiés (tous la première fois), un thème déjà présent
   n'est jamais remplacé (les modifications de l'utilisateur restent) ;
 - le thème courant est dans `~/.config/xfcethemes/.current_theme` ;
-  `packarch-skin render` écrit le thème `default` dans le `/etc/skel` du
+  `packarch-skin render` écrit le thème `packarch` dans le `/etc/skel` du
   paquet (xsettings, xfwm4, xfce4-desktop, terminalrc, GTK 2/3/4,
   `.icons/default`, surcharge GSettings), et `apply-live-config` le refait
   sur le système installé, comme avec Openbox.
@@ -516,7 +519,7 @@ thèmes que le bureau Openbox**, appliqués par **`packarch-skin`** (1.0.0-19) :
   thème sans lui.
 - `theme-switcher.sh --<couleur>` ne fait plus que traduire les couleurs de
   l'ancien sélecteur (lanceurs des utilisateurs existants) : `default` →
-  `default`, `blue` → `packarch`, `purple` → `pink-sylvanas`, `red` →
+  `classic`, `blue` → `packarch`, `purple` → `pink-sylvanas`, `red` →
   `red-satanic`, `yellow` → `yellow-flower`, `green` → `hacking`, `gray` →
   `adaptive`.
 - `init-backdrop.sh` : lancé par `~/.xprofile` avant l'ouverture de la session
