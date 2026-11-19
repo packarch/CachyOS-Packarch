@@ -70,11 +70,16 @@ instantanés. Sur les systèmes déjà installés, le hook de
 `packarch-system-settings` (1.0-19, 1.0-20) remplace le fond sur l'ESP et
 renomme l'instantané dans snapper et dans `limine.conf`.
 
-**Écrans de démarrage de l'ISO.** `grub/splash.png` (1920×1080, fond de
-l'UEFI, chargé par `background_image` dans `grub.cfg`) et `syslinux/splash.png`
-(640×480, BIOS) : fond `#1a1a1f` et pacman jaune, en bas à droite pour GRUB,
-en haut au-dessus du menu pour syslinux. Ils remplacent les images de
-CachyOS (`grub/splash.png` n'était pas chargé).
+**Écrans de démarrage de l'ISO.** En UEFI, GRUB prend le thème `packarch`
+du système installé (copie de celui de `packarch-system-settings` dans
+`grub/themes/packarch`, chargé par `grub.cfg` avec ses polices) : fond avec le
+pacman et le nom en haut, menu placé en pourcentages de l'écran, compte à
+rebours en français, icône `packarch` des entrées (`--class packarch`). Une
+simple image de fond (`background_image`) était étirée et passait sous le
+texte du menu en 800×600. En BIOS, `syslinux/splash.png` (640×480) : fond
+`#1a1a1f` et pacman jaune au-dessus du menu. L'image de CachyOS
+`grub/splash.png` (qui n'était pas chargée) est retirée. Si le thème change
+dans `packarch-system-settings`, recopier le dossier.
 
 ## Sommaire
 
