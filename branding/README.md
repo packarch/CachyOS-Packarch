@@ -7,7 +7,7 @@ chaque fois). Images en 3840 × 2160.
 | Fichier | Contenu |
 |---|---|
 | `fonds/packarch-default.jpg` | fond du thème packarch (bureau) et de LightDM : fond `#0e0e11`, trame de pastilles, grain fin, grand fantôme à peine plus sombre derrière « Pa🟡kar🟡h Linux » |
-| `fonds/packarch-labyrinthe.jpg` | variante pour le bureau : labyrinthe entier (sans fondu, 70 %), « Pa🟡kar🟡h Linux » au centre, ligne de fantômes en bas |
+| `fonds/packarch-labyrinthe.jpg` | variante pour le bureau : labyrinthe entier (sans fondu, 70 %), « Pa🟡kar🟡h Linux » au centre, sans la ligne de fantômes |
 | `sddm/packarch/` | thème SDDM (prototype, Qt 6) : `Main.qml`, `theme.conf`, `metadata.desktop` |
 | `sddm/packarch/background.jpg` | son fond : labyrinthe estompé vers le centre, « Pa🟡kar🟡h Linux », ligne d'un pacman et de 45 fantômes de 8 couleurs en bas |
 | `sddm/packarch/background-sans-fantomes.jpg` | le même sans la ligne du bas (`background=` de `theme.conf`) |
