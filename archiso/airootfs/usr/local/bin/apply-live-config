@@ -4,10 +4,10 @@
 # not chrooted) during the online installation, once the packages are
 # installed in ROOT and USER is created. The settings of the desktop come from
 # its package (packarch-xfce-settings, packarch-openbox-settings or
-# packarch-desktop-settings, which also make Openbox or Packarch the default
-# LightDM session), the ones common to the desktops
-# (LightDM greeter and numeric keypad, no screen blanking, Geany and menu
-# hooks) from packarch-system-settings. This script copies what is specific to
+# packarch-desktop-settings), the login screen from packarch-sddm-theme (SDDM:
+# Packarch theme, first session packarch, openbox or xfce, the installed
+# desktop), the ones common to the desktops (no screen blanking, Geany and
+# menu hooks) from packarch-system-settings. This script copies what is specific to
 # the author and not packaged in the public Packarch repository:
 #   - the desktop-independent part of the live /etc/skel (shells, Geany),
 #     copied to the user's home at the end by Calamares

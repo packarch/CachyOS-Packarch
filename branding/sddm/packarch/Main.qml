@@ -21,6 +21,37 @@ Rectangle {
     readonly property color erreur: config.couleurErreur || "#ff5a48"
     readonly property real echelle: Math.max(0.6, height / 1080)
 
+    // Fichiers des sessions (role « file » de sessionModel), par index
+    property var fichiersSessions: []
+
+    // Session du tout premier démarrage (personne ne s'est encore connecté :
+    // userModel.lastUser vide) : la première installée de sessionsPreferees
+    // (theme.conf), le bureau choisi à l'installation ; ensuite, la dernière
+    // session utilisée, retenue par SDDM
+    function sessionInitiale() {
+        if (userModel.lastUser !== "" && sessionModel.lastIndex >= 0)
+            return sessionModel.lastIndex
+        // SDDM lit « a,b,c » de theme.conf comme une liste
+        const valeur = config.sessionsPreferees || "packarch,openbox,xfce"
+        const preferees = typeof valeur === "string" ? valeur.split(",") : Array.from(valeur)
+        for (const nom of preferees) {
+            const i = fichiersSessions.findIndex(f => f && f.endsWith("/" + nom.trim() + ".desktop")
+                                                  || f === nom.trim() + ".desktop")
+            if (i >= 0)
+                return i
+        }
+        return sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
+    }
+
+    Repeater {
+        model: sessionModel
+        delegate: Item {
+            required property int index
+            required property string file
+            Component.onCompleted: racine.fichiersSessions[index] = file
+        }
+    }
+
     function connecter() {
         message.text = ""
         sddm.login(utilisateur.currentValue, motDePasse.text, session.currentIndex)
@@ -275,5 +306,9 @@ Rectangle {
         }
     }
 
-    Component.onCompleted: motDePasse.forceActiveFocus()
+    Component.onCompleted: {
+        motDePasse.forceActiveFocus()
+        // Une fois la liste des sessions remplie (Repeater)
+        Qt.callLater(() => session.currentIndex = sessionInitiale())
+    }
 }

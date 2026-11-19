@@ -7,7 +7,7 @@ local _files_to_remove=(
   /usr/local/bin/prepare-live-desktop.sh
   /usr/local/bin/removeun-online
   /usr/local/share/livecd-sound
-  /etc/lightdm/lightdm.conf.d/50-packarch-live.conf
+  /etc/sddm.conf.d/50-packarch-live.conf
   /etc/xdg/calamares
   /etc/calamares/branding/packarch
 )

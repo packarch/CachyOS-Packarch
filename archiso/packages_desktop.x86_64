@@ -80,9 +80,8 @@ libfido2
 libgepub
 libusb-compat
 libwnck3
-lightdm
-lightdm-gtk-greeter
-lightdm-gtk-greeter-settings
+packarch-sddm-theme
+sddm
 numlockx
 packarch-system-settings
 liloucalc

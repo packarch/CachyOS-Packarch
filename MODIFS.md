@@ -236,7 +236,7 @@ CP437. `archiso_sys.cfg` démarrait par défaut `arch64`, entrée inexistante :
 | Rôle | Paquets |
 |---|---|
 | Bureau | `xfce4`, les extensions de `xfce4-goodies` **sauf** `parole`, `xfburn`, `xfce4-sensors-plugin` et `mousepad`, `thunar-archive-plugin`, `thunar-media-tags-plugin`, `packarch-xfce-settings` (réglages XFCE dans `/etc/skel` et sélecteur de thèmes, dépôt Packarch, au lieu de `cachyos-xfce-settings` : voir [section 4](#4-réglages-xfce-packarch-xfce-settings)) |
-| Affichage et connexion | `xorg-server`, `xf86-input-libinput`, `lightdm`, `lightdm-gtk-greeter`, `lightdm-gtk-greeter-settings` |
+| Affichage et connexion | `xorg-server`, `xf86-input-libinput`, `sddm`, `packarch-sddm-theme` (LightDM avant le 2026-11-19) |
 | Remplaçants des outils KDE | `network-manager-applet`, `blueman`, `pavucontrol`, `polkit-gnome`, `gvfs`, `gvfs-mtp`, `gvfs-smb`, `file-roller`, `xarchiver`, `ristretto`, `catfish` (recherche de fichiers) |
 | Applications | `geany` (seul éditeur graphique, avec `nano` en console), `meld` (comparaison de fichiers), `nounours-player` (seul lecteur vidéo, avec `mpv` en dépendance ; SMPlayer n'est plus installé, il reste proposé dans Packarch Installer), `htop` (btop est proposé dans Packarch Installer), `yay` |
 | Applications de l'auteur (dépôt Packarch) | `cryptyrust` (chiffrement de fichiers), `liloucalc` (calculatrice scientifique), `nounours-player` (lecteur multimédia), `packarch-rmatrix` (effet « Matrix » en console) |
@@ -292,10 +292,20 @@ après son installation :
   contournement `etc/zsh/zshrc` du live n'est plus nécessaire ;
 - dépendance `expac`, utilisée par l'alias `rip`.
 
-**Gestionnaire de connexion** : `scripts/util-iso.sh` active `lightdm.service` au lieu
-de `plasmalogin.service`. Connexion automatique de `liveuser` en session XFCE
-par `etc/lightdm/lightdm.conf.d/50-packarch-live.conf` (supprimé du système
-installé par `removeun` et `removeun-online`).
+**Gestionnaire de connexion : SDDM** (depuis le 2026-11-19 ; LightDM avant) :
+`scripts/util-iso.sh` active `sddm.service` au lieu de `plasmalogin.service`, avec
+le thème `packarch-sddm-theme` (labyrinthe du thème Packarch, salle avec
+« Packarch Linux » et la connexion, fantômes dans les couloirs ; sources dans
+`branding/`). Connexion automatique de `liveuser` en session XFCE par
+`etc/sddm.conf.d/50-packarch-live.conf` (supprimé du système installé par
+`removeun` et `removeun-online`). Le système installé a `sddm` et
+`packarch-sddm-theme` (`packages_online.conf`), plus LightDM : `dmcheck` de
+Calamares activerait LightDM après SDDM. SDDM 0.21 n'a pas de session par
+défaut : au premier démarrage, le thème prend la première session installée
+de `sessionsPreferees` (`packarch`, `openbox`, `xfce`), donc le bureau choisi ;
+ensuite, SDDM retient la dernière. `removeun-online` ne supprime plus
+`/etc/sddm.conf`, où Calamares (`displaymanager`) écrit la connexion
+automatique.
 
 **Supprimés de `airootfs`** (réglages KDE) : `etc/plasmalogin.conf`,
 `etc/plasmalogin.conf.d/`, le hook `90-cachyos-live-kwin-keyboard.hook`, et dans
@@ -1286,7 +1296,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
 | `build.sh` | ajouté (reconstruction complète ; vérifie d'abord les paquets prérequis) |
 | `run.sh` | ajouté (test dans QEMU, live ou système installé ; vérifie d'abord QEMU et OVMF) |
 | `buildiso.sh`, `util*.sh` | déplacés dans `scripts/` ; `buildiso.sh` trouve la racine du dépôt depuis son emplacement, et son piège `EXIT` n'affiche plus « An unknown error has occurred » quand le build réussit |
-| `scripts/util-iso.sh` | LightDM ; dépôt local Calamares |
+| `scripts/util-iso.sh` | SDDM (LightDM avant le 2026-11-19) ; dépôt local Calamares |
 | `scripts/makepkg-generic.conf` | ajouté (compilation en x86-64 générique) |
 | `reset.sh`, `.gitignore` | ajoutés (nettoyage du projet) |
 | `testiso.sh`, `ci.build.sh`, `lddd.sh`, `machines/`, `testcases/` | supprimés |
@@ -1300,7 +1310,7 @@ Hors fichiers générés à chaque build (`etc/motd`, `etc/environment`,
 | `archiso/airootfs/root/.zshrc` | ajouté (configuration zsh CachyOS pour root) |
 | `archiso/profiledef.sh` | permissions 755 de `cleanup-live-iso`, `apply-live-config`, `live-fit-display`, `github-setup` |
 | `archiso/airootfs/etc/locale.conf`, `locale.gen`, `vconsole.conf`, `localtime`, `X11/xorg.conf.d/00-keyboard.conf` | français, `Europe/Paris` |
-| `archiso/airootfs/etc/lightdm/lightdm.conf.d/50-packarch-live.conf` | ajouté (connexion automatique) |
+| `archiso/airootfs/etc/sddm.conf.d/50-packarch-live.conf` | ajouté (connexion automatique ; `etc/lightdm/lightdm.conf.d/50-packarch-live.conf` avant le 2026-11-19) |
 | `archiso/airootfs/etc/pacman.d/hooks/40-packarch-live-locale-gen.hook` | ajouté |
 | `archiso/airootfs/etc/pacman.d/hooks/80-live-xfce-skel.hook` et `.sh` | ajoutés (bouton du live ; `80-cachyos-live-xfce-skel` jusqu'au 2026-10-24) |
 | `archiso/airootfs/etc/pacman.d/hooks/90-cachyos-live-kwin-keyboard.hook` | supprimé |

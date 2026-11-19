@@ -16,9 +16,10 @@ _clean_packages() {
 #    local xxx
 #    for xxx in "${_toberemoved_packages[@]}"; do pacman -Rs "$xxx" --noconfirm; done
 
-    rm /etc/sddm.conf || true
+    # /etc/sddm.conf : connexion automatique écrite par Calamares
+    # (displaymanager), à garder ; le live est dans sddm.conf.d
     rm /etc/plasmalogin.conf || true
-    rm /etc/lightdm/lightdm.conf.d/50-packarch-live.conf || true
+    rm -f /etc/sddm.conf.d/50-packarch-live.conf
 }
 
 _pacman_fix() {
