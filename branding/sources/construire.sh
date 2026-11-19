@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 #
 # Refait les images de la marque Packarch à partir des sources de ce dossier :
-#   ../fonds/packarch-default.jpg        fond du thème packarch (bureau) et de
-#                                        LightDM : grand fantôme sombre derrière
-#                                        « Packarch Linux »
+#   ../fonds/packarch-fantome.jpg        ancien fond du thème packarch : grand
+#                                        fantôme sombre derrière « Packarch Linux »
 #   ../sddm/packarch/background.jpg      fond du thème SDDM : labyrinthe entier,
 #                                        salle qui contient « Packarch Linux » et
 #                                        la connexion, ligne d'un pacman et de
 #                                        fantômes en bas
 #   ../sddm/packarch/background-sans-fantomes.jpg   le même sans la ligne
-#   ../fonds/packarch-labyrinthe.jpg     variante pour le bureau : labyrinthe
+#   ../fonds/packarch-labyrinthe.jpg     fond du thème packarch (bureau, LightDM ;
+#                                        /usr/share/backgrounds/packarch-default.jpg
+#                                        de packarch-backgrounds) et du compositeur
+#                                        nu (data/fond.svg de packarch-desktop) :
+#                                        labyrinthe
 #                                        entier (sans fondu), texte dans une
 #                                        salle au centre, sans fantômes
 #
@@ -52,14 +55,14 @@ magick -size ${L}x${H} xc:gray50 -seed 42 -attenuate 1 +noise Gaussian -colorspa
 grain() { magick "$1" "$tmp/grain.png" -compose linear-light -composite "$2"; }
 jpeg() { magick "$1" -strip -sampling-factor 4:4:4 -quality 92 "$2"; }
 
-# --- Fond du thème packarch (bureau, LightDM) -------------------------------
+# --- Ancien fond du thème packarch (fantôme derrière le texte) -------------
 mkdir -p ../fonds
 rsvg-convert -h 1000 fantome-sombre.svg -o "$tmp/fantome-sombre.png"
 magick "$tmp/trame.png" "$tmp/fantome-sombre.png" -gravity center -geometry +0-130 -composite "$tmp/b.png"
 grain "$tmp/b.png" "$tmp/bg.png"
 magick "$tmp/texte.png" -filter Lanczos -resize 45% "$tmp/texte45.png"
 magick "$tmp/bg.png" "$tmp/texte45.png" -gravity center -compose over -composite "$tmp/bureau.png"
-jpeg "$tmp/bureau.png" ../fonds/packarch-default.jpg
+jpeg "$tmp/bureau.png" ../fonds/packarch-fantome.jpg
 
 # --- Fond SDDM : labyrinthe entier, salle pour le texte et la connexion ----
 mkdir -p ../sddm/packarch
@@ -119,4 +122,4 @@ grain "$tmp/laby-plein.png" "$tmp/laby-plein-g.png"
 magick "$tmp/laby-plein-g.png" "$tmp/texte52.png" -gravity center -compose over -composite "$tmp/laby-plein-t.png"
 jpeg "$tmp/laby-plein-t.png" ../fonds/packarch-labyrinthe.jpg
 
-echo "Images refaites : ../fonds/packarch-default.jpg, ../fonds/packarch-labyrinthe.jpg, ../sddm/packarch/background.jpg, background-sans-fantomes.jpg"
+echo "Images refaites : ../fonds/packarch-fantome.jpg, ../fonds/packarch-labyrinthe.jpg, ../sddm/packarch/background.jpg, background-sans-fantomes.jpg"
