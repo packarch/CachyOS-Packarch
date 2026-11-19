@@ -5,7 +5,9 @@ import random, sys
 # --salle : salle au centre (10 x 3 cases, comme la maison des fantômes du
 # jeu) pour le texte « Packarch Linux » : sans murs ni pastilles dedans,
 # cadre à double trait aux coins arrondis, ouverte à gauche et à droite.
-# --salle-y=N : rangée du haut de la salle (10 par défaut : centrée).
+# --salle-y=N : rangée du haut de la salle (10 par défaut : centrée) ;
+# --salle-l=N, --salle-h=N : largeur et hauteur en cases (10 et 3 par
+# défaut), salle centrée en largeur, portes au milieu des côtés.
 # --cadre-seul : seulement le cadre de la salle (dessiné sans fondu sur le
 # fond SDDM) ; --sans-cadre : le labyrinthe sans le cadre.
 # Sans --salle, le labyrinthe est le même qu'avant.
@@ -13,14 +15,19 @@ args = sys.argv[1:]
 salle = "--salle" in args
 cadre_seul = "--cadre-seul" in args
 sans_cadre = "--sans-cadre" in args
-haut = next((int(a.split("=")[1]) for a in args if a.startswith("--salle-y=")), 10)
+def opt(nom, defaut):
+    return next((int(a.split("=")[1]) for a in args if a.startswith(nom + "=")), defaut)
+haut = opt("--salle-y", 10)
+larg = opt("--salle-l", 10)
+haute = opt("--salle-h", 3)
 random.seed(7)
 C=96; W,H=3840,2160
 nx,ny=W//C,H//C+1
 ox=(W-nx*C)//2; oy=(H-ny*C)//2
 # Salle : cases [sx0, sx1) x [sy0, sy1), centrée sur l'image
-sx0,sx1,sy0,sy1=15,25,haut,haut+3
-porte=haut+1
+sx0=(nx-larg)//2
+sx1,sy0,sy1=sx0+larg,haut,haut+haute
+porte=haut+haute//2
 def dans(x,y): return salle and sx0<=x<sx1 and sy0<=y<sy1
 # murs : droite[x][y], bas[x][y]
 droite=[[True]*ny for _ in range(nx)]; bas=[[True]*ny for _ in range(nx)]

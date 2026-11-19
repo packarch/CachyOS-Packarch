@@ -4,9 +4,10 @@
 #   ../fonds/packarch-default.jpg        fond du thème packarch (bureau) et de
 #                                        LightDM : grand fantôme sombre derrière
 #                                        « Packarch Linux »
-#   ../sddm/packarch/background.jpg      fond du thème SDDM : labyrinthe estompé
-#                                        vers le centre, « Packarch Linux », ligne
-#                                        d'un pacman et de fantômes en bas
+#   ../sddm/packarch/background.jpg      fond du thème SDDM : labyrinthe entier,
+#                                        salle qui contient « Packarch Linux » et
+#                                        la connexion, ligne d'un pacman et de
+#                                        fantômes en bas
 #   ../sddm/packarch/background-sans-fantomes.jpg   le même sans la ligne
 #   ../fonds/packarch-labyrinthe.jpg     variante pour le bureau : labyrinthe
 #                                        entier (sans fondu), texte dans une
@@ -60,22 +61,14 @@ magick "$tmp/texte.png" -filter Lanczos -resize 45% "$tmp/texte45.png"
 magick "$tmp/bg.png" "$tmp/texte45.png" -gravity center -compose over -composite "$tmp/bureau.png"
 jpeg "$tmp/bureau.png" ../fonds/packarch-default.jpg
 
-# --- Fond SDDM : labyrinthe estompé vers le centre --------------------------
+# --- Fond SDDM : labyrinthe entier, salle pour le texte et la connexion ----
 mkdir -p ../sddm/packarch
-# Le texte est dans une salle du labyrinthe (rangées 8 à 10, au-dessus du
-# panneau de connexion) ; le labyrinthe s'estompe vers le centre, mais pas
-# le cadre de la salle, dessiné à part à 70 %
-python3 -I labyrinthe.py --salle --salle-y=8 --sans-cadre > "$tmp/labyrinthe.svg"
-python3 -I labyrinthe.py --salle --salle-y=8 --cadre-seul > "$tmp/cadre.svg"
+# Salle de 12 x 8 cases (rangées 7 à 14) qui contient « Packarch Linux » et
+# le panneau de connexion de Main.qml (hauteurPanneau de theme.conf)
+python3 -I labyrinthe.py --salle --salle-l=12 --salle-h=8 --salle-y=7 > "$tmp/labyrinthe.svg"
 rsvg-convert "$tmp/labyrinthe.svg" -o "$tmp/labyrinthe.png"
-rsvg-convert "$tmp/cadre.svg" -o "$tmp/cadre.png"
-# Invisible au centre, 70 % vers les bords (ovale)
-magick -size ${L}x${H} radial-gradient:black-white -level 30%,85% -evaluate multiply 0.7 "$tmp/masque.png"
-magick "$tmp/labyrinthe.png" \( +clone -alpha extract "$tmp/masque.png" -compose multiply -composite \) \
-	-alpha off -compose copy-opacity -composite "$tmp/laby-fondu.png"
-magick "$tmp/cadre.png" -channel A -evaluate multiply 0.7 +channel "$tmp/cadre-a.png"
-magick -size ${L}x${H} xc:"$fond" "$tmp/laby-fondu.png" -compose over -composite \
-	"$tmp/cadre-a.png" -compose over -composite "$tmp/laby.png"
+magick "$tmp/labyrinthe.png" -channel A -evaluate multiply 0.7 +channel "$tmp/labyrinthe-a.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/labyrinthe-a.png" -compose over -composite "$tmp/laby.png"
 
 # Ligne du bas : pacman et pastilles, puis fantômes de 8 couleurs sur toute
 # la largeur, centrée
@@ -101,8 +94,8 @@ magick "$tmp/texte.png" -filter Lanczos -resize 52% "$tmp/texte52.png"
 th=$(magick identify -format %h "$tmp/texte52.png")
 for v in laby-ligne laby; do
 	grain "$tmp/$v.png" "$tmp/$v-g.png"
-	# Centre de la salle : 888 px
-	magick "$tmp/$v-g.png" "$tmp/texte52.png" -gravity north -geometry +0+$((888 - th / 2)) -compose over -composite "$tmp/$v-t.png"
+	# Texte en haut de la salle (centre à 818 px), panneau dessous
+	magick "$tmp/$v-g.png" "$tmp/texte52.png" -gravity north -geometry +0+$((818 - th / 2)) -compose over -composite "$tmp/$v-t.png"
 done
 jpeg "$tmp/laby-ligne-t.png" ../sddm/packarch/background.jpg
 jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
