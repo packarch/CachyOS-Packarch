@@ -1,0 +1,13 @@
+[SddmGreeterTheme]
+Name=Packarch
+Description=Thème Packarch : fond du thème packarch (fantôme et « Packarch Linux »), connexion sous le fantôme
+Author=Packarch
+License=MIT
+Type=sddm-theme
+Version=0.1
+Website=https://github.com/packarch/Packarch
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=packarch
+TranslationsDirectory=translations
+QtVersion=6

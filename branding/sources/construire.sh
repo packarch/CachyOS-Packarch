@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+#
+# Refait les images de la marque Packarch à partir des sources de ce dossier :
+#   ../fonds/packarch-default.jpg        fond du thème packarch (bureau) et de
+#                                        LightDM : grand fantôme sombre derrière
+#                                        « Packarch Linux »
+#   ../sddm/packarch/background.jpg      fond du thème SDDM : labyrinthe estompé
+#                                        vers le centre, « Packarch Linux », ligne
+#                                        d'un pacman et de fantômes en bas
+#   ../sddm/packarch/background-sans-fantomes.jpg   le même sans la ligne
+#
+# Usage : ./construire.sh   (ImageMagick 7, rsvg-convert, python3, polices
+# Noto Sans Bold et Light). Images en 3840 × 2160 ; graines fixes (grain,
+# labyrinthe) : le résultat est le même à chaque fois.
+
+set -euo pipefail
+src=$(dirname "$(readlink -f "$0")")
+cd "$src"
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+L=3840 H=2160
+fond='#0e0e11'
+gras=/usr/share/fonts/noto/NotoSans-Bold.ttf
+fin=/usr/share/fonts/noto/NotoSans-Light.ttf
+
+# --- Texte « Pa?kar?h Linux » : les deux « c » remplacés par des pacmans ---
+# Corps 200 ; la hauteur et la position du « c » de Noto Sans Bold (113 px,
+# haut à 103 px dans une ligne de 274 px) placent le pacman sur la ligne de
+# base, avec le léger débord des lettres rondes.
+for t in Pa kar h; do
+	magick -background none -fill '#e6e6e6' -font "$gras" -pointsize 200 label:"$t" "$tmp/seg-$t.png"
+done
+rsvg-convert -w 131 -h 131 packarch-logo.svg -o "$tmp/pac-lettre.png"
+magick -size 135x274 xc:none "$tmp/pac-lettre.png" -geometry +2+92 -composite "$tmp/seg-pac.png"
+magick "$tmp/seg-Pa.png" "$tmp/seg-pac.png" "$tmp/seg-kar.png" "$tmp/seg-pac.png" "$tmp/seg-h.png" \
+	-background none +append "$tmp/mot.png"
+magick -background none -fill '#f0b429' -font "$fin" -pointsize 200 label:'Linux' "$tmp/linux.png"
+magick "$tmp/mot.png" \( -size 55x274 xc:none \) "$tmp/linux.png" -background none +append \
+	-trim +repage "$tmp/texte.png"
+
+# --- Texture commune : trame de pastilles et grain fin ---------------------
+magick -size 48x48 xc:"$fond" -fill '#141418' -draw 'circle 24,24 24,26' "$tmp/tuile.png"
+magick -size ${L}x${H} tile:"$tmp/tuile.png" "$tmp/trame.png"
+# Grain en niveaux de gris, ±2 niveaux environ, sans changer la luminosité
+magick -size ${L}x${H} xc:gray50 -seed 42 -attenuate 1 +noise Gaussian -colorspace gray \
+	+level 49%,51% "$tmp/grain.png"
+grain() { magick "$1" "$tmp/grain.png" -compose linear-light -composite "$2"; }
+jpeg() { magick "$1" -strip -sampling-factor 4:4:4 -quality 92 "$2"; }
+
+# --- Fond du thème packarch (bureau, LightDM) -------------------------------
+mkdir -p ../fonds
+rsvg-convert -h 1000 fantome-sombre.svg -o "$tmp/fantome-sombre.png"
+magick "$tmp/trame.png" "$tmp/fantome-sombre.png" -gravity center -geometry +0-130 -composite "$tmp/b.png"
+grain "$tmp/b.png" "$tmp/bg.png"
+magick "$tmp/texte.png" -filter Lanczos -resize 45% "$tmp/texte45.png"
+magick "$tmp/bg.png" "$tmp/texte45.png" -gravity center -compose over -composite "$tmp/bureau.png"
+jpeg "$tmp/bureau.png" ../fonds/packarch-default.jpg
+
+# --- Fond SDDM : labyrinthe estompé vers le centre --------------------------
+mkdir -p ../sddm/packarch
+python3 -I labyrinthe.py > "$tmp/labyrinthe.svg"
+rsvg-convert "$tmp/labyrinthe.svg" -o "$tmp/labyrinthe.png"
+# Invisible au centre, 70 % vers les bords (ovale)
+magick -size ${L}x${H} radial-gradient:black-white -level 30%,85% -evaluate multiply 0.7 "$tmp/masque.png"
+magick "$tmp/labyrinthe.png" \( +clone -alpha extract "$tmp/masque.png" -compose multiply -composite \) \
+	-alpha off -compose copy-opacity -composite "$tmp/laby-fondu.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/laby-fondu.png" -compose over -composite "$tmp/laby.png"
+
+# Ligne du bas : pacman et pastilles, puis fantômes de 8 couleurs sur toute
+# la largeur, centrée
+hl=56
+couleurs=(rouge vert rose bleu orange violet cyan turquoise)
+for c in "${couleurs[@]}"; do rsvg-convert -h $hl fantome-$c.svg -o "$tmp/f-$c.png"; done
+rsvg-convert -h $((hl * 100 / 90)) packarch-logo-large.svg -o "$tmp/pacman.png"
+w=$(magick identify -format %w "$tmp/f-rouge.png")
+pw=$(magick identify -format %w "$tmp/pacman.png")
+ecart_f=24 ecart_p=30
+pas=$((w + ecart_f))
+n=$(( (L - 2 * 150 - pw - ecart_p + ecart_f) / pas ))
+largeur=$((pw + ecart_p + n * pas - ecart_f))
+marge=$(( (L - largeur) / 2 ))
+y=$((H - 230 - hl))
+args=()
+for ((i = 0; i < n; i++)); do
+	args+=("$tmp/f-${couleurs[i % 8]}.png" -geometry +$((marge + pw + ecart_p + i * pas))+$y -composite)
+done
+magick "$tmp/laby.png" "$tmp/pacman.png" -geometry +${marge}+$((y - 3)) -composite "${args[@]}" "$tmp/laby-ligne.png"
+
+magick "$tmp/texte.png" -filter Lanczos -resize 52% "$tmp/texte52.png"
+for v in laby-ligne laby; do
+	grain "$tmp/$v.png" "$tmp/$v-g.png"
+	magick "$tmp/$v-g.png" "$tmp/texte52.png" -gravity north -geometry +0+828 -compose over -composite "$tmp/$v-t.png"
+done
+jpeg "$tmp/laby-ligne-t.png" ../sddm/packarch/background.jpg
+jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
+
+echo "Images refaites : ../fonds/packarch-default.jpg, ../sddm/packarch/background.jpg, background-sans-fantomes.jpg"

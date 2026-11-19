@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logo large de Packarch : pacman jaune et trois pastilles -->
+<svg xmlns="http://www.w3.org/2000/svg" width="175" height="100" viewBox="0 0 175 100">
+  <defs>
+    <linearGradient id="jaune" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd95a"/>
+      <stop offset="1" stop-color="#f0b429"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#jaune)">
+    <path d="M50 50 L86.86 24.19 A45 45 0 1 0 86.86 75.81 Z"/>
+    <circle cx="112" cy="50" r="6"/>
+    <circle cx="137" cy="50" r="6"/>
+    <circle cx="162" cy="50" r="6"/>
+  </g>
+</svg>
