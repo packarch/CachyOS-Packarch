@@ -817,7 +817,7 @@ Le choix « Openbox » installe `packarch-openbox-settings` (anciennement
 `packarch-openbox`, renommé en 7.0-72 comme `packarch-xfce-settings` ;
 `replaces`/`provides`) depuis [packarch] (sources :
 [myrepo-pkgs](https://github.com/packarch/myrepo-pkgs), licence GPL3) :
-polybar, menus rofi, dunst, picom, kitty et 10 thèmes, changés depuis
+polybar, menus rofi, dunst, picom, Ghostty (kitty avant le 2026-11-19) et 10 thèmes, changés depuis
 le menu du bureau. La configuration est reprise de la version GPL3 de la
 configuration Openbox d'Aditya Shakya (7.0-9) ; la version premium (licence
 DBAD : 15 thèmes de plus et la fonction « Changer les couleurs ») n'est plus
@@ -869,7 +869,20 @@ Modifications de la configuration d'origine :
   (famille renommée dans le fichier). Les mentions d'auteur (Aditya Shakya)
   sont conservées ;
 - **thèmes appliqués par `packarch-skin`** (ci-dessus) ;
-- **kitty seul terminal** (raccourcis, menus, polybar,
+- **Ghostty seul terminal depuis le 2026-11-19** (kitty avant, voir le point
+  suivant) : menu du clic droit avec Copier et Coller, couleurs du thème
+  rechargées en direct (`SIGUSR2`, `packarch-skin` 1.11.0), images par le
+  protocole de kitty (logo de fastfetch). Configuration commune aux bureaux
+  Openbox et Packarch, `~/.config/ghostty/config` de
+  `packarch-system-settings` 1.0-23, qui inclut `colors` et `fonts` (écrits
+  par `packarch-skin` à chaque thème) ; terminal root par `packarch-terminal`
+  (configuration de l'utilisateur, `PACKARCH_GHOSTTY_CONFIG` d'`ob-asroot` et
+  d'`asroot`) ; fenêtres flottante et plein écran par `--class`
+  (`org.packarch.TerminalFloat`, `org.packarch.TerminalFullscreen` :
+  Ghostty ignore un identifiant sans point). Polybar et waybar : module
+  `launch-terminal` (`launch-kitty` avant), `/etc/xdg/xdg-terminals.list` :
+  `com.mitchellh.ghostty.desktop` ;
+- **kitty seul terminal** jusqu'au 2026-11-19 (raccourcis, menus, polybar,
   `networkmanager-dmenu`, obmenu-generator, `ob-music`, `ob-furminal`,
   « Ouvrir un terminal ici » de Thunar) : alacritty et xfce4-terminal ne sont
   plus installés, le menu « Couleurs du terminal » (schémas d'alacritty) est
