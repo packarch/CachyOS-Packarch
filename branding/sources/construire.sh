@@ -9,8 +9,8 @@
 #                                        d'un pacman et de fantômes en bas
 #   ../sddm/packarch/background-sans-fantomes.jpg   le même sans la ligne
 #   ../fonds/packarch-labyrinthe.jpg     variante pour le bureau : labyrinthe
-#                                        entier (sans fondu), texte au centre,
-#                                        sans la ligne de fantômes
+#                                        entier (sans fondu), texte dans une
+#                                        salle au centre, sans fantômes
 #
 # Usage : ./construire.sh   (ImageMagick 7, rsvg-convert, python3, polices
 # Noto Sans Bold et Light). Images en 3840 × 2160 ; graines fixes (grain,
@@ -100,7 +100,10 @@ jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
 
 # --- Variante du bureau : labyrinthe entier (sans fondu), texte au centre,
 # sans la ligne de fantômes ---------------------------------------------------
-magick "$tmp/labyrinthe.png" -channel A -evaluate multiply 0.7 +channel "$tmp/laby-plein-a.png"
+# Le texte est dans une salle du labyrinthe (labyrinthe.py --salle)
+python3 -I labyrinthe.py --salle > "$tmp/labyrinthe-salle.svg"
+rsvg-convert "$tmp/labyrinthe-salle.svg" -o "$tmp/labyrinthe-salle.png"
+magick "$tmp/labyrinthe-salle.png" -channel A -evaluate multiply 0.7 +channel "$tmp/laby-plein-a.png"
 magick -size ${L}x${H} xc:"$fond" "$tmp/laby-plein-a.png" -compose over -composite "$tmp/laby-plein.png"
 grain "$tmp/laby-plein.png" "$tmp/laby-plein-g.png"
 magick "$tmp/laby-plein-g.png" "$tmp/texte52.png" -gravity center -compose over -composite "$tmp/laby-plein-t.png"
