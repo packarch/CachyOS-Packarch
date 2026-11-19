@@ -8,6 +8,9 @@
 #                                        vers le centre, « Packarch Linux », ligne
 #                                        d'un pacman et de fantômes en bas
 #   ../sddm/packarch/background-sans-fantomes.jpg   le même sans la ligne
+#   ../fonds/packarch-labyrinthe.jpg     variante pour le bureau : labyrinthe
+#                                        entier (sans fondu), texte au centre,
+#                                        ligne de fantômes en bas
 #
 # Usage : ./construire.sh   (ImageMagick 7, rsvg-convert, python3, polices
 # Noto Sans Bold et Light). Images en 3840 × 2160 ; graines fixes (grain,
@@ -95,4 +98,11 @@ done
 jpeg "$tmp/laby-ligne-t.png" ../sddm/packarch/background.jpg
 jpeg "$tmp/laby-t.png" ../sddm/packarch/background-sans-fantomes.jpg
 
-echo "Images refaites : ../fonds/packarch-default.jpg, ../sddm/packarch/background.jpg, background-sans-fantomes.jpg"
+# --- Variante du bureau : labyrinthe entier (sans fondu), texte au centre ---
+magick "$tmp/labyrinthe.png" -channel A -evaluate multiply 0.7 +channel "$tmp/laby-plein-a.png"
+magick -size ${L}x${H} xc:"$fond" "$tmp/laby-plein-a.png" -compose over -composite 	"$tmp/pacman.png" -compose over -geometry +${marge}+$((y - 3)) -composite "${args[@]}" "$tmp/laby-plein.png"
+grain "$tmp/laby-plein.png" "$tmp/laby-plein-g.png"
+magick "$tmp/laby-plein-g.png" "$tmp/texte52.png" -gravity center -compose over -composite "$tmp/laby-plein-t.png"
+jpeg "$tmp/laby-plein-t.png" ../fonds/packarch-labyrinthe.jpg
+
+echo "Images refaites : ../fonds/packarch-default.jpg, ../fonds/packarch-labyrinthe.jpg, ../sddm/packarch/background.jpg, background-sans-fantomes.jpg"
