@@ -906,7 +906,15 @@ Modifications de la configuration d'origine :
   (`org.packarch.TerminalFloat`, `org.packarch.TerminalFullscreen` :
   Ghostty ignore un identifiant sans point). Polybar et waybar : module
   `launch-terminal` (`launch-kitty` avant), `/etc/xdg/xdg-terminals.list` :
-  `com.mitchellh.ghostty.desktop` ;
+  `com.mitchellh.ghostty.desktop`. Comptes d'avant Ghostty : ils gardent
+  kitty tant qu'il est installé ; kitty retiré (il n'est plus une
+  dépendance), leur configuration passe à Ghostty à l'ouverture de la
+  session (`packarch-run` de `packarch-desktop-settings` 1.2-6,
+  `packarch-openbox-ghostty` de `packarch-openbox-settings` 7.0-84, lancé par
+  `/etc/profile.d` : scripts de `/etc/skel`, les anciens gardés dans
+  `avant-ghostty/`, kitty remplacé dans `rc.xml`, les menus et les barres
+  des thèmes) : sans cela, le terminal des touches, des menus et des barres
+  ne se lançait plus ;
 - **kitty seul terminal** jusqu'au 2026-11-19 (raccourcis, menus, polybar,
   `networkmanager-dmenu`, obmenu-generator, `ob-music`, `ob-furminal`,
   « Ouvrir un terminal ici » de Thunar) : alacritty et xfce4-terminal ne sont
