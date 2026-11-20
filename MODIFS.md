@@ -892,7 +892,10 @@ Modifications de la configuration d'origine :
   sont conservées ;
 - **thèmes appliqués par `packarch-skin`** (ci-dessus) ;
 - **Ghostty seul terminal depuis le 2026-11-19** (kitty avant, voir le point
-  suivant) : menu du clic droit avec Copier et Coller, couleurs du thème
+  suivant) : menu du clic droit avec Copier et Coller, sans les bulles de
+  Ghostty (« Copié dans le presse-papiers » à chaque sélection, rechargement
+  de la configuration à chaque thème : `app-notifications = false`,
+  `packarch-system-settings` 1.0-24), couleurs du thème
   rechargées en direct (`SIGUSR2`, `packarch-skin` 1.11.0), images par le
   protocole de kitty (logo de fastfetch). Configuration commune aux bureaux
   Openbox et Packarch, `~/.config/ghostty/config` de
