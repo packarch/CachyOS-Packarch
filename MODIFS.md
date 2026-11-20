@@ -814,6 +814,18 @@ clic.
   refait sur le système installé, comme avec Openbox. Thèmes de
   l'utilisateur : `~/.config/packarch/themes`. Thème courant :
   `~/.config/packarch/.current_theme`.
+- **Horloge de waybar en français** : formats `{:L%A %d %B %Y}` (sans le `L`
+  de `std::format`, waybar écrit les jours et les mois en anglais quelle que
+  soit la langue du système) et `"locale": "fr_FR.UTF-8"`, que
+  `scripts/statusbar` remplace par la langue de la session (`LC_ALL`,
+  `LC_TIME` ou `LANG`, comme `locale = ${env:LANG:fr_FR.UTF-8}` de polybar) :
+  un système installé en `fr_BE`, `fr_CH` ou `fr_CA` n'a pas forcément
+  `fr_FR.UTF-8`, et waybar retire l'horloge si la locale n'existe pas.
+  `packarch-skin` ajoute le `L` aux barres des thèmes copiés dans
+  `~/.config/packarch/themes` avant `packarch-desktop-settings` 1.2-1 (un
+  thème déjà présent n'y est jamais remplacé). Thème `packarch` : date
+  complète et heure, l'heure seule au clic. Les barres sont écrites par
+  `gen-waybar.py` (`packarch-desktop-settings`).
 - `packarch-desktop-settings` n'a aucun fichier en commun avec
   `packarch-openbox-settings` ni `packarch-xfce-settings` : il peut être
   installé à côté (terminal des applications `Terminal=true` :
